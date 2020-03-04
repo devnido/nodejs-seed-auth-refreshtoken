@@ -8,7 +8,7 @@ const Schema = new mongoose.Schema({
         required: [true, 'Email is required!'],
         trim: true,
         validate: {
-            validator: function (val) {
+            validator: function(val) {
                 return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val);
             },
             message: 'invalid email format'
@@ -32,22 +32,19 @@ const Schema = new mongoose.Schema({
     refreshToken: {
         type: String
     },
+    refreshTokenExpDate: {
+        type: Date
+    }
+    changePassToken: {
+        type: String
+    },
+    changePassTokenExpDate: {
+        type: Date
+    }
 }, {
     timestamps: true
 })
 
-
-Schema.methods = {
-    removePassword() {
-        return {
-            _id: this._id,
-            email: this.email,
-            name: this.name,
-            status: this.status,
-            refreshToken: this.refreshToken
-        };
-    }
-};
 
 
 const User = authdb.model('user', Schema)

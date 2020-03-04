@@ -18,7 +18,7 @@ const service = {
 
             const payload = {
                 uid: idUser,
-                exp: moment().add(2, 'years').unix()
+                exp: Date.now() + 1000 * 60 * 2 // 2 minutes
             }
 
             const secret = config.app.secretApi;
@@ -64,7 +64,7 @@ const service = {
 
                     result.uid = tokenDecoded.uid;
 
-                    if (tokenDecoded.exp <= moment().unix()) {
+                    if (tokenDecoded.exp <= Date.now()) {
 
                         result.status = 'expired';
 

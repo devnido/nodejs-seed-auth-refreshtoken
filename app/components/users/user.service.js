@@ -1,40 +1,65 @@
 const userRepository = require('./user.repository');
-const bcrypt = require('bcryptjs');
+const passwordService = require('../../framework/services/password.service');
 
 const service = {
     register: (email, name, password) => {
 
-        const passwordHash = bcrypt.hashSync(password, 8);
+        const hashedPassword = passwordService.hashPassword(password);
 
         const newUser = {
             name: name,
             email: email,
-            password: passwordHash,
+            password: hashedPassword,
             status: 'active'
         }
 
         return userRepository.insert(newUser)
-
     },
     authenticate: (email, password) => new Promise((resolve, reject) => {
 
         console.log(email);
 
-        userRepository.authenticate(email)
+        userRepository.findToAuthentication(email)
             .then(user => {
-
-                if (bcrypt.compareSync(password, user.password) && user.status == 'active') {
+                if (passwordService.comparePassword(password, user.password) && user.status == 'active') {
                     resolve(user)
                 } else {
                     resolve(false)
                 }
-
             })
             .catch(error => reject(error))
     }),
+    existsByEmail: email => userRepository.existsByEmail(email),
+
+    existsByChangeToken: changeToken => userRepository.existsByValidChangeToken(changeToken, Date.now()),
+
+    getUserByEmail: email => userRepository.findByEmail(email),
+
+    generateAndStoreChangeToken: (email) => new Promise((resolve, reject) => {
+
+        let result = {};
+
+        tokenService.generateChangeToken()
+            .then(changeToken => {
+                result.changeToken = changeToken;
+                return userRepository.setChangeToken(email, changeToken)
+            })
+            .then(userUpdated => {
+
+                result.userUpdated = userUpdated;
+
+                resolve(result)
+            })
+            .catch(error => {
+                reject(error)
+            })
+
+    }),
     storeResfreshToken: (idUser, refreshToken) => {
 
-        return userRepository.setRefreshToken(idUser, refreshToken);
+        const expDate = Date.now() + 1000 * 60 * 60 * 24 * 2 // 2 days
+
+        return userRepository.setRefreshToken(idUser, refreshToken, expDate);
     },
     isBlocked: (idUser) => new Promise((resolve, reject) => {
         userRepository.findByID(idUser)

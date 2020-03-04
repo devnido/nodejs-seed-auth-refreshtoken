@@ -1,93 +1,38 @@
 const User = require('./user.model');
 
 const repository = {
-    findByID: (id) => {
-        return new Promise((resolve, reject) => {
-            User.findById(id)
-                .then((user) => {
-                    //quitar  __V 
-                    resolve(user)
-                })
-                .catch((err) => {
-                    reject(err)
-                })
-        })
-    },
-    authenticate: (email) => {
-        return new Promise((resolve, reject) => {
+    existsByEmail: email => User.exists({ email: email }),
 
+    existsById: id => User.exists({ _id: id }),
 
-            console.log(email);
-            User.findOne({
-                email: email
-            })
-                .then((_user) => {
+    existsByValidChangeToken: (changeToken, date) => User.exists({ changeToken, status: 'active', changeTokenExpDate: { $lt: date } }),
 
-                    console.log(_user);
+    findById: id => User.findById(id, { password: 0, refreshToken: 0, changeToken: 0 }),
 
-                    if (_user) {
+    findByEmail: email => User.findOne({ email: email }, { password: 0, refreshToken: 0, changeToken: 0 }),
 
+    findByIdWithRefreshToken: id => User.findById(id, { password: 0, changeToken: 0 }),
 
+    findByEmailWithChangeToken: email => User.findById(id, { password: 0, refreshToken: 0 }),
 
-                        //   let user = _user.removePassword();
+    findByEmailWithPassword: email => User.findById(id, { changeToken: 0, refreshToken: 0 }),
 
-                        resolve(_user)
-                    } else {
-                        resolve(false)
-                    }
-                })
-                .catch((err) => {
-                    reject(err)
-                })
-        })
-    },
-    insert: (userData) => {
+    findToAuthentication: email => User.findOne({ email }),
 
-        return new Promise((resolve, reject) => {
-            new User(userData).save()
-                .then((_user) => {
+    insert: ({ email, password, name, status }) => new User({ email, password, name, status }).save(),
 
-                    let user = _user.removePassword();
+    setRefreshToken: (idUser, refreshToken, refreshTokenExpDate) =>
+        User.findOneAndUpdate({ _id: idUser }, { refreshToken, refreshTokenExpDate }, { new: true }),
 
-                    resolve(user)
-                })
-                .catch((err) => {
-                    reject(err)
-                })
-        })
-    },
-    setRefreshToken: (idUser, refreshToken) => new Promise((resolve, reject) => {
+    setChangeToken: (email, changeToken, changeTokenExpDate) =>
+        User.findOneAndUpdate({ email, status: 'active' }, { changeToken, changeTokenExpDate }, { new: true }),
 
-        User.findOneAndUpdate({
-            _id: idUser
-        }, {
-            refreshToken: refreshToken
-        }, {
-            new: true
-        }).then((_user) => {
+    setNewPassword: (id, password) => User.findOneAndUpdate({ _id: id, status: 'active' }, { password }, { new: true }),
 
+    setNewPasswordAndRemoveChangeToken: (id, password) => User.findOneAndUpdate({ _id: id, status: 'active' }, { password, changeToken: '' }, { new: true }),
 
-            let user = _user.removePassword();
+    delete: userId => User.findOneAndRemove({ _id: userId })
 
-            resolve(user)
-        }).catch((err) => {
-            reject(err)
-        })
-    }),
-    delete: (userId) => {
-        return new Promise((resolve, reject) => {
-            User.findOneAndRemove({
-                _id: userId
-            })
-                .then((result) => {
-
-                    resolve(result)
-                })
-                .catch((err) => {
-                    reject(err)
-                })
-        })
-    }
 }
 
 module.exports = repository;
