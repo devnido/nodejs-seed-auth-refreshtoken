@@ -5,17 +5,17 @@ const repository = {
 
     existsById: id => User.exists({ _id: id }),
 
-    existsByValidChangeToken: (changeToken, date) => User.exists({ changeToken, status: 'active', changeTokenExpDate: { $lt: date } }),
+    existsByValidResetPassToken: (resetPassToken, date) => User.exists({ resetPassToken, status: 'active', resetPassTokenExpDate: { $lt: date } }),
 
-    findById: id => User.findById(id, { password: 0, refreshToken: 0, changeToken: 0 }),
+    findById: id => User.findById(id, { password: 0, refreshToken: 0, resetPassToken: 0 }),
 
-    findByEmail: email => User.findOne({ email: email }, { password: 0, refreshToken: 0, changeToken: 0 }),
+    findByEmail: email => User.findOne({ email: email }, { password: 0, refreshToken: 0, resetPassToken: 0 }),
 
-    findByIdWithRefreshToken: id => User.findById(id, { password: 0, changeToken: 0 }),
+    findByIdWithRefreshToken: id => User.findById(id, { password: 0, resetPassToken: 0 }),
 
-    findByEmailWithChangeToken: email => User.findById(id, { password: 0, refreshToken: 0 }),
+    findByEmailWithResetPassToken: email => User.findById(id, { password: 0, refreshToken: 0 }),
 
-    findByEmailWithPassword: email => User.findById(id, { changeToken: 0, refreshToken: 0 }),
+    findByEmailWithPassword: email => User.findById(id, { resetPassToken: 0, refreshToken: 0 }),
 
     findToAuthentication: email => User.findOne({ email }),
 
@@ -24,12 +24,12 @@ const repository = {
     setRefreshToken: (idUser, refreshToken, refreshTokenExpDate) =>
         User.findOneAndUpdate({ _id: idUser }, { refreshToken, refreshTokenExpDate }, { new: true }),
 
-    setChangeToken: (email, changeToken, changeTokenExpDate) =>
-        User.findOneAndUpdate({ email, status: 'active' }, { changeToken, changeTokenExpDate }, { new: true }),
+    setResetPassToken: (email, resetPassToken, resetPassTokenExpDate) =>
+        User.findOneAndUpdate({ email, status: 'active' }, { resetPassToken, resetPassTokenExpDate }, { new: true }),
 
     setNewPassword: (id, password) => User.findOneAndUpdate({ _id: id, status: 'active' }, { password }, { new: true }),
 
-    setNewPasswordAndRemoveChangeToken: (id, password) => User.findOneAndUpdate({ _id: id, status: 'active' }, { password, changeToken: '' }, { new: true }),
+    removeResetPassToken: id => User.findOneAndUpdate({ _id: id, status: 'active' }, { resetPassToken: '' }, { new: true }),
 
     delete: userId => User.findOneAndRemove({ _id: userId })
 

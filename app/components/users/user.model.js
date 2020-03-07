@@ -35,10 +35,10 @@ const Schema = new mongoose.Schema({
     refreshTokenExpDate: {
         type: Date
     }
-    changePassToken: {
+    resetPassToken: {
         type: String
     },
-    changePassTokenExpDate: {
+    resetPassTokenExpDate: {
         type: Date
     }
 }, {

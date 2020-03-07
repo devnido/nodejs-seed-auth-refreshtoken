@@ -2,7 +2,7 @@ const userRepository = require('./user.repository');
 const passwordService = require('../../framework/services/password.service');
 
 const service = {
-    register: (email, name, password) => {
+    register: async(email, name, password) => {
 
         const hashedPassword = passwordService.hashPassword(password);
 
@@ -13,73 +13,71 @@ const service = {
             status: 'active'
         }
 
-        return userRepository.insert(newUser)
+        const userAdded = await userRepository.insert(newUser);
+
+        userAdded.password = ':)';
+
+        return userAdded;
+
     },
-    authenticate: (email, password) => new Promise((resolve, reject) => {
+    authenticate: async(email, password) => {
 
         console.log(email);
 
-        userRepository.findToAuthentication(email)
-            .then(user => {
-                if (passwordService.comparePassword(password, user.password) && user.status == 'active') {
-                    resolve(user)
-                } else {
-                    resolve(false)
-                }
-            })
-            .catch(error => reject(error))
-    }),
+        const user = await userRepository.findToAuthentication(email)
+
+        if (!user) {
+            return false
+        }
+
+        if (passwordService.comparePassword(password, user.password) && user.status === 'active') {
+            return user
+        } else {
+            return false
+        }
+
+    },
     existsByEmail: email => userRepository.existsByEmail(email),
 
-    existsByChangeToken: changeToken => userRepository.existsByValidChangeToken(changeToken, Date.now()),
+    existsByResetPassToken: resetPassToken => userRepository.existsByValidResetPassToken(resetPassToken, Date.now()),
 
     getUserByEmail: email => userRepository.findByEmail(email),
 
-    generateAndStoreChangeToken: (email) => new Promise((resolve, reject) => {
+    storeResetPassToken: async(email, resetPassToken) => {
 
-        let result = {};
+        const expDate = Date.now() + 1000 * 60 * 60 * 24 * 2 // 2 days in milliseconds
 
-        tokenService.generateChangeToken()
-            .then(changeToken => {
-                result.changeToken = changeToken;
-                return userRepository.setChangeToken(email, changeToken)
-            })
-            .then(userUpdated => {
+        const user = await userRepository.setResetPassToken(email, resetPassToken)
 
-                result.userUpdated = userUpdated;
+        user.password = ':)'
 
-                resolve(result)
-            })
-            .catch(error => {
-                reject(error)
-            })
+        return user
 
-    }),
-    storeResfreshToken: (idUser, refreshToken) => {
-
-        const expDate = Date.now() + 1000 * 60 * 60 * 24 * 2 // 2 days
-
-        return userRepository.setRefreshToken(idUser, refreshToken, expDate);
     },
-    isBlocked: (idUser) => new Promise((resolve, reject) => {
-        userRepository.findByID(idUser)
-            .then(user => {
+    storeResfreshToken: async(idUser, refreshToken) => {
 
-                resolve(user && user.status == 'blocked');
-            })
-            .catch(err => {
-                reject(err)
-            })
-    }),
-    hasRefreshToken: (idUser, refreshToken) => new Promise((resolve, reject) => {
-        userRepository.findByID(idUser)
-            .then(user => {
-                resolve(user && user.refreshToken != null && user.refreshToken == refreshToken)
-            })
-            .catch(err => {
-                reject(err)
-            })
-    })
+        const expDate = Date.now() + 1000 * 60 * 60 * 24 * 2 // 2 days in milliseconds
+
+        const user = await userRepository.setRefreshToken(idUser, refreshToken, expDate);
+
+        user.password = ':)'
+
+        return user
+    },
+    isBlocked: async(idUser) => {
+
+        const user = await userRepository.findById(idUser)
+
+        return (user && user.status === 'blocked');
+
+    },
+    hasRefreshToken: async(idUser, refreshToken) => {
+
+        const user = await userRepository.findByIdWithRefreshToken(idUser)
+
+        return (user && user.refreshToken != null && user.refreshToken === refreshToken)
+
+    }
 }
 
 module.exports = service;

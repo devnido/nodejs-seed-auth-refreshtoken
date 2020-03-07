@@ -1,121 +1,61 @@
 const userService = require('../users/user.service');
-const jwtService = require('../../framework/services/jsonwebtoken.service');
+const tokenService = require('../../framework/services/token.service');
 
 const controller = {
     register: (email, name, password) => {
 
-        return userService.register(email, name, password);
+        return userService.register(email, name, password)
 
     },
-    loginAndGenerateTokens: (email, password) => new Promise((resolve, reject) => {
+    loginAndGenerateTokens: async(email, password) => {
 
-        let userData = '';
-        let refreshToken = '';
+        const [user, refeshToken] = await Promise.all(userService.authenticate(email, password), tokenService.generateRefreshToken())
 
-        userService.authenticate(email, password)
-            .then(user => {
-                if (user) {
+        if (!user) {
+            return false
+        }
 
-                    userData = user;
+        const [userWithRefreshToken, jwt] = await Promise.all(userService.storeResfreshToken(user._id, refeshToken), tokenService.generateJwt(user._id))
 
-                    return jwtService.generateRefreshToken()
+        return { user, refreshToken, jwt }
 
-                } else {
-                    resolve(false);
-                }
-            })
-            .then(_refreshToken => {
-
-                refreshToken = _refreshToken;
-
-                return userService.storeResfreshToken(userData._id, _refreshToken);
-            })
-            .then(userWithRefreshToken => {
-
-                userData = userWithRefreshToken;
-
-                return jwtService.generateJwt(userData._id)
-
-            })
-            .then(jwt => {
-
-                resolve({
-                    user: userData,
-                    refreshToken: refreshToken,
-                    jwt: jwt
-                })
-
-            })
-            .catch(error => reject(error))
-
-    }),
-    refreshTheToken: (idUser, bearer, refreshToken) => new Promise((resolve, reject) => {
+    },
+    refreshTheJwt: async(idUser, bearer, refreshToken) => {
 
         const jwt = bearer.split(' ')[1];
 
-        let uid = '';
-        let status = '';
-        let belongsToIdUser = '';
+        const { uid, status } = await tokenService.decode(jwt)
 
-        jwtService.decode(jwt)
-            .then(jwtDecoded => {
+        const userHasRefreshToken = await userService.hasRefreshToken(uid, refreshToken)
 
-                uid = jwtDecoded.uid;
-                status = jwtDecoded.status;
-                return userService.hasRefreshToken(uid, refreshToken)
-            })
-            .then(result => {
+        if (status !== 'expired') {
+            throw 'El token no ha expirado'
+        }
+        if (!userHasRefreshToken) {
+            throw 'Refresh token no pertenece al usuario'
+        }
+        if (uid !== idUser) {
+            throw 'El usuario es un impostor'
+        }
 
-                belongsToIdUser = result;
+        const newJwt = await tokenService.generateJwt(uid);
 
-                if (status == 'expired') {
+        return newJwt;
 
+    },
+    verifyUser: async(idUser, refreshToken) => {
 
-                    if (belongsToIdUser) {
-                        if (uid == idUser)
-                            return tokenService.generateJwt(uid);
-                        else
-                            throw 'El usuario es un impostor';
-                    } else {
-                        throw 'Refresh token no pertenece al usuario';
-                    }
-                } else {
-                    throw 'El token no ha expirado';
-                }
+        const hasRefreshToken = await userService.hasRefreshToken(idUser, refreshToken)
 
-            })
-            .then(newJwt => {
-                resolve({
-                    newJwt: newJwt
-                });
-            })
-            .catch(err => {
-                reject(err);
-            });
-    }),
-    verifyUser: (idUser, refreshToken) => new Promise((resolve, reject) => {
+        let = status;
 
-        userService.hasRefreshToken(idUser, refreshToken)
-            .then(result => {
-
-                const belongs = result;
-
-                if (belongs) {
-                    resolve({
-                        status: 'active'
-                    })
-                } else {
-                    resolve({
-                        status: 'inactive'
-                    })
-                }
-
-            })
-            .catch(err => {
-                reject(err);
-            });
-    })
-
+        if (hasRefreshToken) {
+            status = 'active'
+        } else {
+            status = 'inactive'
+        }
+        return { status }
+    }
 }
 
 module.exports = controller;
