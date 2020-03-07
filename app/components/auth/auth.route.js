@@ -35,7 +35,7 @@ const route = {
                     next({ error: err, status: 500 })
                 }
 
-            });
+            })
 
         router.route('/login').post(
             authValidator.login,
@@ -71,7 +71,85 @@ const route = {
                 } catch (err) {
                     next(err);
                 }
-            });
+            })
+
+        router.route('/forgot').post(
+            authValidator.forgotPassword,
+            async(req, res, next) => {
+
+                try {
+
+                    const { email } = req.body;
+
+                    // result = { changeToken: kasjdkjasdjkaskdjsa }
+                    const result = await authController.forgotPassword(email);
+
+                    if (typeof result === 'undefined') {
+                        next({
+                            error: 'error en auth.route.forgot',
+                            status: 500
+                        })
+                    }
+
+                    if (!result) {
+                        next({
+                            error: 'Ocurrio un problema al enviar el email',
+                            status: 500
+                        })
+                    }
+
+                    const response = {
+                        ok: true,
+                        content: {
+                            message: 'Email enviado exitosamente'
+                        }
+                    }
+                    res.status(200).json(response);
+
+                } catch (err) {
+                    next({
+                        error: err,
+                        status: 401
+                    })
+                }
+
+            })
+
+        router.route('/recovery/:resetToken').post(
+            authValidator.recoveryPassword,
+            async(req, res, next) => {
+
+                try {
+
+                    const { resetToken } = req.params;
+                    const { password } = req.body;
+
+                    // result = { changeToken: kasjdkjasdjkaskdjsa }
+                    const result = await authController.recoveryPassword(resetToken, password);
+
+                    if (typeof result === 'undefined' || !result) {
+                        next({
+                            error: 'Ocurrio un error al restablecer la contraseña',
+                            status: 500
+                        })
+                    }
+
+                    const response = {
+                        ok: true,
+                        content: {
+                            message: 'Contraseña restablecida exitosamente'
+                        }
+                    }
+                    res.status(200).json(response);
+
+                } catch (err) {
+                    next({
+                        error: err,
+                        status: 401
+                    })
+                }
+
+            })
 
         router.route('/refresh/:idUser').post(
             authValidator.refreshTheJwt,
@@ -86,7 +164,7 @@ const route = {
                     const refreshToken = req.body.refreshToken;
 
                     // result = { newJwt: kasjdkjasdjkaskdjsa }
-                    const { newJwt } = await authController.refreshTheJwt(idUser, bearer, refreshToken);
+                    const newJwt = await authController.refreshTheJwt(idUser, bearer, refreshToken);
 
                     if (!newJwt) {
                         next({
@@ -111,7 +189,7 @@ const route = {
                     })
                 }
 
-            });
+            })
 
         router.route('/verify/:idUser').post(
             authValidator.sanitizeIdUser,
@@ -148,7 +226,7 @@ const route = {
                     })
                 }
 
-            });
+            })
 
     }
 }

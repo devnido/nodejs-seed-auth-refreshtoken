@@ -41,41 +41,42 @@ const service = {
 
     existsByResetPassToken: resetPassToken => userRepository.existsByValidResetPassToken(resetPassToken, Date.now()),
 
-    getUserByEmail: email => userRepository.findByEmail(email),
+    getByEmail: email => userRepository.findByEmail(email),
 
-    storeResetPassToken: async(email, resetPassToken) => {
+    getByResetPassToken: resetPassToken => userRepository.getByResetPassToken(resetPassToken),
+
+    storeResetPassToken: async(idUser, resetPassToken) => {
 
         const expDate = Date.now() + 1000 * 60 * 60 * 24 * 2 // 2 days in milliseconds
 
-        const user = await userRepository.setResetPassToken(email, resetPassToken)
-
-        user.password = ':)'
-
-        return user
+        return userRepository.setResetPassToken(email, resetPassToken)
 
     },
-    storeResfreshToken: async(idUser, refreshToken) => {
+    storeResfreshToken: (idUser, refreshToken) => {
 
         const expDate = Date.now() + 1000 * 60 * 60 * 24 * 2 // 2 days in milliseconds
 
-        const user = await userRepository.setRefreshToken(idUser, refreshToken, expDate);
+        return userRepository.setRefreshToken(idUser, refreshToken, expDate)
 
-        user.password = ':)'
+    },
+    storeNewPassword: (idUser, password) => {
 
-        return user
+        const passwordHash = passwordService.hashPassword(password)
+
+        return userRepository.setNewPassword(idUser, passwordHash)
     },
     isBlocked: async(idUser) => {
 
         const user = await userRepository.findById(idUser)
 
-        return (user && user.status === 'blocked');
+        return (user && typeof user.status !== 'undefined' && user.status === 'blocked');
 
     },
     hasRefreshToken: async(idUser, refreshToken) => {
 
         const user = await userRepository.findByIdWithRefreshToken(idUser)
 
-        return (user && user.refreshToken != null && user.refreshToken === refreshToken)
+        return (user && typeof user.refreshToken !== 'undefined' && user.refreshToken === refreshToken)
 
     }
 }

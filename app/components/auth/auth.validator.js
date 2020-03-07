@@ -64,6 +64,72 @@ const validator = {
         check('password').trim(),
         errorHandler.validation(validationResult)
     ],
+    forgotPassword: [
+        check('email').trim().escape(),
+        body('email').isEmail().withMessage('El email ingresado no es válido')
+        .exists({
+            checkFalsy: true
+        }).withMessage('email is required')
+        .custom((email) => {
+            return userService.existsByEmail(email)
+                .then(result => {
+                    if (result) {
+
+                    } else {
+                        return Promise.reject('El usuario no existe')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El usuario no existe'),
+        errorHandler.validation(validationResult)
+    ],
+    recoveryPassword: [
+
+        check('resetToken').trim().escape(),
+
+        param('resetToken')
+        .exists({
+            checkFalsy: true
+        }).withMessage('El token es requerido')
+        .custom((resetToken) => {
+            return userService.existsByResetPassToken(resetToken)
+                .then(result => {
+
+
+                    if (result) {
+
+
+                    } else {
+                        return Promise.reject('El token no es válido')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El token no es válido'),
+
+
+        body('password')
+        .exists({
+            checkFalsy: true
+        }).withMessage('La contraseña es obligatoria')
+        .isLength({
+            min: 6
+        }).withMessage('Debe contener como minimo 6 caracteres')
+        .custom((password, { req }) => {
+            if (password !== req.body.confirmPassword) {
+
+                throw new Error("Las contraseñas no coinciden");
+            } else {
+                return password;
+            }
+        }),
+        errorHandler.validation(validationResult)
+    ],
     sanitizeUsername: [
         check('email').trim().escape(),
         body('email').isEmail().withMessage('User must be a valid email'),

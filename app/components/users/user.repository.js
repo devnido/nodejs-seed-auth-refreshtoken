@@ -13,7 +13,7 @@ const repository = {
 
     findByIdWithRefreshToken: id => User.findById(id, { password: 0, resetPassToken: 0 }),
 
-    findByEmailWithResetPassToken: email => User.findById(id, { password: 0, refreshToken: 0 }),
+    getByResetPassToken: resetPassToken => User.findOne({ resetPassToken: resetPassToken, status: 'active', resetPassTokenExpDate: { $lt: date } }, { password: 0, refreshToken: 0 }),
 
     findByEmailWithPassword: email => User.findById(id, { resetPassToken: 0, refreshToken: 0 }),
 
@@ -22,14 +22,14 @@ const repository = {
     insert: ({ email, password, name, status }) => new User({ email, password, name, status }).save(),
 
     setRefreshToken: (idUser, refreshToken, refreshTokenExpDate) =>
-        User.findOneAndUpdate({ _id: idUser }, { refreshToken, refreshTokenExpDate }, { new: true }),
+        User.updateOne({ _id: idUser }, { refreshToken, refreshTokenExpDate }),
 
-    setResetPassToken: (email, resetPassToken, resetPassTokenExpDate) =>
-        User.findOneAndUpdate({ email, status: 'active' }, { resetPassToken, resetPassTokenExpDate }, { new: true }),
+    setResetPassToken: (idUser, resetPassToken, resetPassTokenExpDate) =>
+        User.updateOne({ _id: idUser, status: 'active' }, { resetPassToken, resetPassTokenExpDate }),
 
-    setNewPassword: (id, password) => User.findOneAndUpdate({ _id: id, status: 'active' }, { password }, { new: true }),
+    setNewPassword: (id, password) => User.updateOne({ _id: id, status: 'active' }, { password }),
 
-    removeResetPassToken: id => User.findOneAndUpdate({ _id: id, status: 'active' }, { resetPassToken: '' }, { new: true }),
+    removeResetPassToken: id => User.updateOne({ _id: id, status: 'active' }, { resetPassToken: '' }, { new: true }),
 
     delete: userId => User.findOneAndRemove({ _id: userId })
 

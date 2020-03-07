@@ -1,5 +1,6 @@
 const userService = require('../users/user.service');
 const tokenService = require('../../framework/services/token.service');
+const emailService = require('../../framework/services/email.service')
 
 const controller = {
     register: (email, name, password) => {
@@ -9,15 +10,35 @@ const controller = {
     },
     loginAndGenerateTokens: async(email, password) => {
 
-        const [user, refeshToken] = await Promise.all(userService.authenticate(email, password), tokenService.generateRefreshToken())
+        const [user, refeshToken] = await Promise.all([userService.authenticate(email, password), tokenService.generateRefreshToken()])
 
         if (!user) {
             return false
         }
 
-        const [userWithRefreshToken, jwt] = await Promise.all(userService.storeResfreshToken(user._id, refeshToken), tokenService.generateJwt(user._id))
+        const [userWithRefreshToken, jwt] = await Promise.all([userService.storeResfreshToken(user._id, refeshToken), tokenService.generateJwt(user._id)])
 
         return { user, refreshToken, jwt }
+
+    },
+    forgotPassword: async(email) => {
+
+        const [user, resetPassToken] = await Promise.all([userService.getByEmail(email), tokenService.generateResetPassToken()])
+
+        const result = await userService.storeResetPassToken(user._id, resetPassToken);
+
+        const resultSentEmail = await emailService.sendResetPassEmail(email, user.name, resetPassToken)
+
+        return (typeof resultSentEmail !== 'undefined' && resultSentEmail.response.includes('250 OK'))
+
+    },
+    recoveryPassword: async(resetPassToken, passoword) => {
+
+        const user = await userService.getByResetPassToken(resetPassToken)
+
+        const result = await userService.storeNewPassword(user._id, password)
+
+        return result
 
     },
     refreshTheJwt: async(idUser, bearer, refreshToken) => {

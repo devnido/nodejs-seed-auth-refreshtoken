@@ -12,7 +12,7 @@ const error = {
             }) => {
                 // Build your resulting errors however you want! String, object, whatever - it works!
 
-                return `${location}[${param}]: ${msg} -> '${value}'`;
+                return { location, param, msg, value };
             };
 
             const errors = validationResult(req).formatWith(errorFormatter);
@@ -32,7 +32,7 @@ const error = {
         return validation;
     },
     bodyParser: (err, req, res, next) => {
-        console.log(err);
+
 
         if (err instanceof SyntaxError) {
             next({
