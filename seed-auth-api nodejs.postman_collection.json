@@ -1,0 +1,247 @@
+{
+	"info": {
+		"_postman_id": "029308d9-3d5b-4b0f-a1fb-5c0801a31ed1",
+		"name": "seed-auth-api nodejs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"chokonido\",\n\t\"email\":\"chokonido@hotmail.com\",\n\t\"password\":\"123456\",\n\t\"confirmPassword\":\"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"chokonido@hotmail.com\",\n\t\"password\":\"qwerty\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/forgot",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"chokonido@hotmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/forgot",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"forgot"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/recovery/:resetToken",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"password\":\"qwerty\",\n\"confirmPassword\":\"qwerty\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/recovery/:resetToken",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"recovery",
+						":resetToken"
+					],
+					"variable": [
+						{
+							"key": "resetToken",
+							"value": "oOfXqSfldIz4NFVyGQj2t6DqCMpKANQDUTlFXBADgmHeuTlymfmaQOgJ0DwIGFQugt"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/refresh/:idUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZTY0YjUyNmIyMjIwYjRiMjRiZGVlZGIiLCJleHAiOjE1ODM3MTMzMDMxNjQsImlhdCI6MTU4MzcxMzE4M30.AhP0cFE80y8tCbXCR3BJKTVQph-P8VE9EgORqhTZ5lU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"refresh\":\"At5hgLWiUygSKAY715VenG3LR2HERbZuaagDmji1a0JWzYdKbDbFEKasSh3i28gG0qyKvKMuIgf6FVadd197HKV1OclDXZopubWjGVO3H7xrW3gDxKPGwUakXab6ZQO3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/refresh/:idUser",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"refresh",
+						":idUser"
+					],
+					"variable": [
+						{
+							"key": "idUser",
+							"value": "5e64b526b2220b4b24bdeedb"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/verify/:idUser",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "refresh",
+						"value": "At5hgLWiUygSKAY715VenG3LR2HERbZuaagDmji1a0JWzYdKbDbFEKasSh3i28gG0qyKvKMuIgf6FVadd197HKV1OclDXZopubWjGVO3H7xrW3gDxKPGwUakXab6ZQO3",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/api/v1/verify/:idUser",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"verify",
+						":idUser"
+					],
+					"variable": [
+						{
+							"key": "idUser",
+							"value": "5e64b526b2220b4b24bdeedb"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
