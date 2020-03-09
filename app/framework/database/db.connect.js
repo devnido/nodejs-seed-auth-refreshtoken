@@ -31,4 +31,4 @@ if (user && pass) {
 }
 
 
-module.exports = mongoose.createConnection(connectionString, mongoOptions)
+module.exports = mongoose.connect(connectionString, mongoOptions)

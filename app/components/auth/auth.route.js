@@ -11,6 +11,9 @@ const route = {
             authValidator.register,
             async(req, res, next) => {
 
+                console.log('llego aqui');
+
+
                 try {
 
                     const { email, name, password } = req.body;
@@ -32,7 +35,7 @@ const route = {
                     res.status(200).json(response);
 
                 } catch (error) {
-                    next({ error: err, status: 500 })
+                    next({ error: error, status: 500 })
                 }
 
             })
@@ -84,12 +87,6 @@ const route = {
                     // result = { changeToken: kasjdkjasdjkaskdjsa }
                     const result = await authController.forgotPassword(email);
 
-                    if (typeof result === 'undefined') {
-                        next({
-                            error: 'error en auth.route.forgot',
-                            status: 500
-                        })
-                    }
 
                     if (!result) {
                         next({
@@ -127,7 +124,7 @@ const route = {
                     // result = { changeToken: kasjdkjasdjkaskdjsa }
                     const result = await authController.recoveryPassword(resetToken, password);
 
-                    if (typeof result === 'undefined' || !result) {
+                    if (!result) {
                         next({
                             error: 'Ocurrio un error al restablecer la contraseña',
                             status: 500
@@ -157,14 +154,14 @@ const route = {
 
                 try {
 
-                    const bearer = req.headers['authorization'];
+                    const bearer = req.headers.authorization;
 
-                    const idUser = req.params.idUser;
+                    const { idUser } = req.params;
 
-                    const refreshToken = req.body.refreshToken;
+                    const { refresh } = req.body;
 
                     // result = { newJwt: kasjdkjasdjkaskdjsa }
-                    const newJwt = await authController.refreshTheJwt(idUser, bearer, refreshToken);
+                    const newJwt = await authController.refreshTheJwt(idUser, bearer, refresh);
 
                     if (!newJwt) {
                         next({
@@ -177,7 +174,7 @@ const route = {
                         ok: true,
                         content: {
                             message: 'Successful Refresh',
-                            jwt: 'Bearer ' + jwt
+                            jwt: 'Bearer ' + newJwt
                         }
                     }
                     res.status(200).json(response);
@@ -192,7 +189,7 @@ const route = {
             })
 
         router.route('/verify/:idUser').post(
-            authValidator.sanitizeIdUser,
+            authValidator.verifyUser,
             async(req, res, next) => {
 
                 try {
@@ -202,9 +199,9 @@ const route = {
                     const { idUser } = req.params
 
                     // result = { status: 'inactive' || status: 'active' }
-                    const result = await authController.verifyUser(idUser, refreshToken);
+                    const { status } = await authController.verifyUser(idUser, refresh);
 
-                    if (!result) {
+                    if (!status) {
                         next({ error: 'error en auth.route.verify', status: 500 })
                     }
 

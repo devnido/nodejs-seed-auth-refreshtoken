@@ -10,13 +10,13 @@ const controller = {
     },
     loginAndGenerateTokens: async(email, password) => {
 
-        const [user, refeshToken] = await Promise.all([userService.authenticate(email, password), tokenService.generateRefreshToken()])
+        const [user, refreshToken] = await Promise.all([userService.authenticate(email, password), tokenService.generateRefreshToken()])
 
         if (!user) {
             return false
         }
 
-        const [userWithRefreshToken, jwt] = await Promise.all([userService.storeResfreshToken(user._id, refeshToken), tokenService.generateJwt(user._id)])
+        const [resultStore, jwt] = await Promise.all([userService.storeResfreshToken(user._id, refreshToken), tokenService.generateJwt(user._id)])
 
         return { user, refreshToken, jwt }
 
@@ -29,16 +29,18 @@ const controller = {
 
         const resultSentEmail = await emailService.sendResetPassEmail(email, user.name, resetPassToken)
 
-        return (typeof resultSentEmail !== 'undefined' && resultSentEmail.response.includes('250 OK'))
+        return (resultSentEmail && resultSentEmail.response.includes('250 OK'))
 
     },
-    recoveryPassword: async(resetPassToken, passoword) => {
+    recoveryPassword: async(resetPassToken, password) => {
 
         const user = await userService.getByResetPassToken(resetPassToken)
 
-        const result = await userService.storeNewPassword(user._id, password)
+        const resultStore = await userService.storeNewPassword(user._id, password)
 
-        return result
+        const resultDelete = await userService.removeResetPassToken(user._id)
+
+        return resultStore
 
     },
     refreshTheJwt: async(idUser, bearer, refreshToken) => {
@@ -67,10 +69,11 @@ const controller = {
     verifyUser: async(idUser, refreshToken) => {
 
         const hasRefreshToken = await userService.hasRefreshToken(idUser, refreshToken)
+        const isBlocked = await userService.isBlocked(idUser)
 
-        let = status;
+        let status;
 
-        if (hasRefreshToken) {
+        if (hasRefreshToken && !isBlocked) {
             status = 'active'
         } else {
             status = 'inactive'

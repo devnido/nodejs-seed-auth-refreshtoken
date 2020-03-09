@@ -22,15 +22,25 @@ const service = {
     },
     authenticate: async(email, password) => {
 
-        console.log(email);
 
-        const user = await userRepository.findToAuthentication(email)
+        let user = await userRepository.findToAuthentication(email)
 
         if (!user) {
             return false
         }
 
         if (passwordService.comparePassword(password, user.password) && user.status === 'active') {
+
+            user = user.toObject();
+
+
+            delete user.refreshToken
+            delete user.refreshTokenExpDate
+
+            delete user.resetPassToken
+            delete user.resetPassTokenExpDate
+
+
             return user
         } else {
             return false
@@ -39,17 +49,19 @@ const service = {
     },
     existsByEmail: email => userRepository.existsByEmail(email),
 
+    existsById: idUser => userRepository.existsById(idUser),
+
     existsByResetPassToken: resetPassToken => userRepository.existsByValidResetPassToken(resetPassToken, Date.now()),
 
     getByEmail: email => userRepository.findByEmail(email),
 
-    getByResetPassToken: resetPassToken => userRepository.getByResetPassToken(resetPassToken),
+    getByResetPassToken: resetPassToken => userRepository.getByResetPassToken(resetPassToken, Date.now()),
 
     storeResetPassToken: async(idUser, resetPassToken) => {
 
         const expDate = Date.now() + 1000 * 60 * 60 * 24 * 2 // 2 days in milliseconds
 
-        return userRepository.setResetPassToken(email, resetPassToken)
+        return userRepository.setResetPassToken(idUser, resetPassToken, expDate)
 
     },
     storeResfreshToken: (idUser, refreshToken) => {
@@ -69,16 +81,17 @@ const service = {
 
         const user = await userRepository.findById(idUser)
 
-        return (user && typeof user.status !== 'undefined' && user.status === 'blocked');
+        return (user && user.status === 'blocked');
 
     },
     hasRefreshToken: async(idUser, refreshToken) => {
 
         const user = await userRepository.findByIdWithRefreshToken(idUser)
 
-        return (user && typeof user.refreshToken !== 'undefined' && user.refreshToken === refreshToken)
+        return (user && user.refreshToken === refreshToken)
 
-    }
+    },
+    removeResetPassToken: idUser => userRepository.removeResetPassToken(idUser)
 }
 
 module.exports = service;

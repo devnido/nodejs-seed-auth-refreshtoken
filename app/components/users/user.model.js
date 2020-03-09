@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 
-const authdb = require('../../framework/database/db.connect');
-
 const Schema = new mongoose.Schema({
     email: {
         type: String,
-        required: [true, 'Email is required!'],
+        required: true,
         trim: true,
         validate: {
             validator: function(val) {
@@ -16,9 +14,9 @@ const Schema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'Password is required!'],
+        required: true,
         trim: true,
-        minlength: [6, 'Password need to be longer!']
+        minlength: 6
     },
     name: {
         type: String,
@@ -34,7 +32,7 @@ const Schema = new mongoose.Schema({
     },
     refreshTokenExpDate: {
         type: Date
-    }
+    },
     resetPassToken: {
         type: String
     },
@@ -47,6 +45,6 @@ const Schema = new mongoose.Schema({
 
 
 
-const User = authdb.model('user', Schema)
+const User = mongoose.model('user', Schema)
 
 module.exports = User

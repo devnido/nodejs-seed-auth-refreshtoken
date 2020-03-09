@@ -14,20 +14,22 @@ const validator = {
     register: [
         check(['email', 'name']).trim().escape(),
 
-        body('email').isEmail().withMessage('must be a valid email')
+        body('email').isEmail().withMessage('El email debe ser válido')
         .custom((email) => {
             return userService.existsByEmail(email)
                 .then(result => {
+                    console.log(result);
+
                     if (result) {
                         return Promise.reject('El email ya está registrado')
                     } else {
-
+                        return result
                     }
                 })
                 .catch(err => {
                     throw new Error(err);
                 })
-        }).withMessage('El token no es válido'),
+        }).withMessage('El email ya está registrado'),
 
         body('name')
         .exists({
@@ -76,14 +78,14 @@ const validator = {
                     if (result) {
 
                     } else {
-                        return Promise.reject('El usuario no existe')
+                        return Promise.reject('El email no existe')
                     }
                 })
                 .catch(err => {
 
                     throw new Error(err);
                 })
-        }).withMessage('El usuario no existe'),
+        }).withMessage('El email no existe'),
         errorHandler.validation(validationResult)
     ],
     recoveryPassword: [
@@ -97,12 +99,7 @@ const validator = {
         .custom((resetToken) => {
             return userService.existsByResetPassToken(resetToken)
                 .then(result => {
-
-
-                    if (result) {
-
-
-                    } else {
+                    if (result) {} else {
                         return Promise.reject('El token no es válido')
                     }
                 })
@@ -112,6 +109,13 @@ const validator = {
                 })
         }).withMessage('El token no es válido'),
 
+        body('confirmPassword')
+        .exists({
+            checkFalsy: true
+        }).withMessage('La confirmacion de la contraseña es obligatoria')
+        .isLength({
+            min: 6
+        }).withMessage('Debe contener como minimo 6 caracteres'),
 
         body('password')
         .exists({
@@ -122,30 +126,62 @@ const validator = {
         }).withMessage('Debe contener como minimo 6 caracteres')
         .custom((password, { req }) => {
             if (password !== req.body.confirmPassword) {
-
                 throw new Error("Las contraseñas no coinciden");
             } else {
                 return password;
             }
         }),
-        errorHandler.validation(validationResult)
-    ],
-    sanitizeUsername: [
-        check('email').trim().escape(),
-        body('email').isEmail().withMessage('User must be a valid email'),
+
         errorHandler.validation(validationResult)
     ],
     refreshTheJwt: [
         check(['idUser', 'refresh', 'authorization']).trim().escape(),
-        param('idUser').isMongoId().withMessage('idUser must be a valid Id'),
-        header('authorization').isJWT().withMessage('El token es incorrecto'),
+
+
+
+        param('idUser').isMongoId().withMessage('El id del usuario no es válido')
+        .custom((idUser) => {
+            return userService.existsById(idUser)
+                .then(result => {
+                    if (result) {
+
+                    } else {
+                        return Promise.reject('El usuario no existe')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El email no existe'),
+
+        body('refresh')
+        .exists({
+            checkFalsy: true
+        }).withMessage('El refresh token es obligatorio'),
 
         errorHandler.validation(validationResult)
 
     ],
-    sanitizeIdUser: [
-        check('idUser').trim().escape(),
-        param('idUser').isMongoId().withMessage('idUser must be a valid Id'),
+    verifyUser: [
+        check(['idUser', 'refresh']).trim().escape(),
+
+        param('idUser').isMongoId().withMessage('El id del usuario no es válido')
+        .custom((idUser) => {
+            return userService.existsById(idUser)
+                .then(result => {
+                    if (result) {
+
+                    } else {
+                        return Promise.reject('El usuario no existe')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El email no existe'),
+
         errorHandler.validation(validationResult)
     ]
 }

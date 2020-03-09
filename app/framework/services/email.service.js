@@ -9,7 +9,7 @@ const service = {
 
         const baseUrl = config.app.baseUrl;
 
-        const contentHTML = getTemplateToNewUser(name, baseUrl, resetPassToken);
+        const contentHTML = getTemplateResetPassword(name, baseUrl, resetPassToken);
 
         const subjet = 'Solicitud Nueva Contraseña';
 
