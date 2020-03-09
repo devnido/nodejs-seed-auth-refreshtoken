@@ -2,7 +2,7 @@
 
 ### Descripción
 
-Proyecto base para levantar una api como **servidor de autenticación** para acceder a un **servidor de recursos** utilizando **json web token** y **refresh token**
+Proyecto base para levantar una api como **servidor de autenticación** para acceder a un **servidor de recursos** utilizando **json web token** y **refresh token** como credenciales de acceso.
 
 Está desarrollado en nodejs versión v12.13.0 y mongo db versión v4.2.1
 
