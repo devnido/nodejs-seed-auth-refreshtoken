@@ -49,8 +49,8 @@ routes.init(express, app);
 // })
 
 
-//middleware error handler
-//require('./seeds/index').init();
+//seed
+require('./seeds/index').init();
 
 app.use(error.log)
 app.use(error.handler)

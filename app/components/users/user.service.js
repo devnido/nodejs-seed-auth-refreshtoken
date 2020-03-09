@@ -91,7 +91,24 @@ const service = {
         return (user && user.refreshToken === refreshToken)
 
     },
-    removeResetPassToken: idUser => userRepository.removeResetPassToken(idUser)
+    removeResetPassToken: idUser => userRepository.removeResetPassToken(idUser),
+
+    addSeedUser: async(email, password, name) => {
+
+        const passwordHash = passwordService.hashPassword(password);
+
+        const existsUser = await userRepository.existsByEmail(email)
+
+        if (existsUser) {
+            return false
+        }
+
+        const newUser = await userRepository.insert({ email, password: passwordHash, name, status: 'active' })
+
+        return newUser;
+
+    }
+
 }
 
 module.exports = service;

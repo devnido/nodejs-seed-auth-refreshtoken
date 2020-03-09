@@ -30,6 +30,14 @@ const config = {
         from: process.env.EMAIL_FROM,
         user: process.env.EMAIL_AUTH,
         pass: process.env.EMAIL_AUTH_PASS,
+    },
+    seed: {
+        user: {
+            email: process.env.EMAIL_SEED_USER,
+            pass: process.env.PASS_SEED_USER,
+            name: process.env.NAME_SEED_USER
+        }
+
     }
 }
 
