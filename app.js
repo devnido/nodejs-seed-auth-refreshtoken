@@ -50,7 +50,7 @@ routes.init(express, app);
 
 
 //seed
-require('./seeds/index').init();
+require('./seeds/index').exec();
 
 app.use(error.log)
 app.use(error.handler)

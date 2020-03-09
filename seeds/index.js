@@ -3,8 +3,8 @@ const userSeed = require('./users/user.seed');
 
 const seed = {
 
-    init: () => {
-        userSeed.init()
+    exec: () => {
+        userSeed.exec()
 
     }
 
