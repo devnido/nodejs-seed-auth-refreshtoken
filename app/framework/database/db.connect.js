@@ -12,7 +12,7 @@ const database = process.env.DB_AUTH_DATABASE;
 const connectionString = `${driver}://${host}:${port}/${database}`;
 
 mongoose.connection.on('error', err => {
-    console.log("el error de la coneccion mongodb");
+    console.log("el error de la conexion mongodb");
     console.log(err);
 });
 

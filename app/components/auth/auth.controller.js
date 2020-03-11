@@ -18,7 +18,7 @@ const controller = {
 
         const [resultStore, jwt] = await Promise.all([userService.storeResfreshToken(user._id, refreshToken), tokenService.generateJwt(user._id)])
 
-        return { user, refreshToken, jwt }
+        return { user, refresh: refreshToken, jwt: 'Bearer ' + jwt }
 
     },
     forgotPassword: async(email) => {

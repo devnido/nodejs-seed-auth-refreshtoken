@@ -54,16 +54,13 @@ const route = {
                         next({ error: 'invalid user or password', status: 401 });
                     }
 
-                    const { user, refreshToken, jwt } = loginResult;
+                    const { user, refresh, jwt } = loginResult;
 
-                    if (refreshToken && jwt && user) {
-
-                        res.setHeader('Authorization', 'Bearer ' + jwt);
-                        res.setHeader('Refresh', refreshToken);
+                    if (refresh && jwt && user) {
 
                         const response = {
                             ok: true,
-                            content: { message: 'Login Success', user: user }
+                            content: { message: 'Login Success', user, jwt, refresh }
                         }
 
                         res.status(200).json(response);
