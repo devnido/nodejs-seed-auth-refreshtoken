@@ -38,6 +38,10 @@ const config = {
             name: process.env.NAME_SEED_USER
         }
 
+    },
+    recaptcha: {
+        site: process.env.RECAPTCHA_SITE_VERIFY,
+        key: process.env.RECAPTCHA_PRIVATE_KEY
     }
 }
 

@@ -1,5 +1,6 @@
 const errorHandler = require('../../framework/middlewares/error-handler.middleware');
 const userService = require('../users/user.service');
+const captchaService = require('../../framework/services/recaptcha.service');
 
 const {
     check,
@@ -61,9 +62,30 @@ const validator = {
 
     ],
     login: [
-        check('email').trim().escape(),
+        check(['email', 'captcha']).trim().escape(),
+
         body('email').isEmail().withMessage('User must be a valid email'),
         check('password').trim(),
+
+        body('captcha')
+        .exists().withMessage('email is obligatorio')
+        .custom((captcha) => {
+            return captchaService.verifyCaptcha(captcha)
+                .then(result => {
+                    if (result) {
+
+                    } else {
+                        return Promise.reject('El captcha es incorrecto')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El captcha es incorrecto'),
+
+
+
         errorHandler.validation(validationResult)
     ],
     forgotPassword: [
