@@ -58,6 +58,23 @@ const validator = {
             }
         }),
 
+        body('captcha')
+        .exists().withMessage('email is obligatorio')
+        .custom((captcha) => {
+            return captchaService.verifyCaptcha(captcha)
+                .then(result => {
+                    if (result) {
+
+                    } else {
+                        return Promise.reject('El captcha es incorrecto')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El captcha es incorrecto'),
+
         errorHandler.validation(validationResult)
 
     ],
@@ -108,6 +125,24 @@ const validator = {
                     throw new Error(err);
                 })
         }).withMessage('El email no existe'),
+
+        body('captcha')
+        .exists().withMessage('email is obligatorio')
+        .custom((captcha) => {
+            return captchaService.verifyCaptcha(captcha)
+                .then(result => {
+                    if (result) {
+
+                    } else {
+                        return Promise.reject('El captcha es incorrecto')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El captcha es incorrecto'),
+
         errorHandler.validation(validationResult)
     ],
     recoveryPassword: [
@@ -153,6 +188,23 @@ const validator = {
                 return password;
             }
         }),
+
+        body('captcha')
+        .exists().withMessage('email is obligatorio')
+        .custom((captcha) => {
+            return captchaService.verifyCaptcha(captcha)
+                .then(result => {
+                    if (result) {
+
+                    } else {
+                        return Promise.reject('El captcha es incorrecto')
+                    }
+                })
+                .catch(err => {
+
+                    throw new Error(err);
+                })
+        }).withMessage('El captcha es incorrecto'),
 
         errorHandler.validation(validationResult)
     ],
