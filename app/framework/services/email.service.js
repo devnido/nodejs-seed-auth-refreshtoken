@@ -35,9 +35,9 @@ function getTemplateResetPassword(name, baseUrl, resetPassToken) {
     <h1>Hola ${name},</h1>
     <p>Recientemente has solicitado un cambio de contraseña para ingresar al sistema. </p>
 <br>
-    <p>Haz click en el siguiente enlace:  <a href="${baseUrl}/#/recovery/${resetPassToken}">Restablecer Contraseña</a></p>
+    <p>Haz click en el siguiente enlace:  <a href="${baseUrl}/#/auth/recovery/${resetPassToken}">Restablecer Contraseña</a></p>
     <br>
-    <p>Si no puedes hacer click en el enlace por favor copia esta URL en el navegador web ${baseUrl}/#/recovery/${resetPassToken}</p>
+    <p>Si no puedes hacer click en el enlace por favor copia esta URL en el navegador web ${baseUrl}/#/auth/recovery/${resetPassToken}</p>
        
     <br>
         <p>Si tu no solicitaste un cambio de contraseña, por favor ignora este email</p>
