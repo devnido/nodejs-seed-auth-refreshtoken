@@ -1,10 +1,4 @@
-const {
-    check,
-    body,
-    param,
-    validationResult,
-    header
-} = require('express-validator')
+const { check, body, param, validationResult, header } = require('express-validator')
 
 const validator = ({ errorHandler, userService, recaptchaService }) => ({
     register: [
