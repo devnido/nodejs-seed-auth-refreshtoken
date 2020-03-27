@@ -6,17 +6,15 @@ const repository = ({ User }) => ({
 
     existsByValidResetPassToken: (resetPassToken, date) => User.exists({ resetPassToken, status: 'active', resetPassTokenExpDate: { $gt: date } }),
 
-    findById: id => User.findById(id, { password: 0, refreshToken: 0, resetPassToken: 0 }),
+    getById: id => User.findById(id, { password: 0, refreshToken: 0, resetPassToken: 0 }),
 
-    findByEmail: email => User.findOne({ email }, { password: 0, refreshToken: 0, resetPassToken: 0 }),
+    getByEmail: email => User.findOne({ email }, { password: 0, refreshToken: 0, resetPassToken: 0 }),
 
-    findByIdWithRefreshToken: id => User.findById(id, { password: 0, resetPassToken: 0 }),
+    getByIdWithRefreshToken: id => User.findById(id, { password: 0, resetPassToken: 0 }),
 
     getByResetPassToken: (resetPassToken, date) => User.findOne({ resetPassToken, status: 'active', resetPassTokenExpDate: { $gt: date } }, { password: 0, refreshToken: 0 }),
 
-    findByEmailWithPassword: email => User.findById(id, { resetPassToken: 0, refreshToken: 0 }),
-
-    findToAuthentication: email => User.findOne({ email }),
+    getToAuthenticate: email => User.findOne({ email }),
 
     insert: ({ email, password, name, status }) => new User({ email, password, name, status }).save(),
 
@@ -32,7 +30,7 @@ const repository = ({ User }) => ({
 
     removeRefreshToken: id => User.updateOne({ _id: id, status: 'active' }, { refreshToken: '', refreshTokenExpDate: Date.now() }),
 
-    delete: userId => User.findOneAndRemove({ _id: userId })
+    delete: userId => User.deleteOne({ _id: userId })
 
 })
 

@@ -21,7 +21,7 @@ const service = ({ userRepository, passwordService }) => ({
     authenticate: async(email, password) => {
 
 
-        let user = await userRepository.findToAuthentication(email)
+        let user = await userRepository.getToAuthenticate(email)
 
         if (!user) {
             return false
@@ -51,7 +51,7 @@ const service = ({ userRepository, passwordService }) => ({
 
     existsByResetPassToken: resetPassToken => userRepository.existsByValidResetPassToken(resetPassToken, Date.now()),
 
-    getByEmail: email => userRepository.findByEmail(email),
+    getByEmail: email => userRepository.getByEmail(email),
 
     getByResetPassToken: resetPassToken => userRepository.getByResetPassToken(resetPassToken, Date.now()),
 
@@ -77,14 +77,14 @@ const service = ({ userRepository, passwordService }) => ({
     },
     isBlocked: async(idUser) => {
 
-        const user = await userRepository.findById(idUser)
+        const user = await userRepository.getById(idUser)
 
         return (user && user.status === 'blocked');
 
     },
     hasRefreshToken: async(idUser, refreshToken) => {
 
-        const user = await userRepository.findByIdWithRefreshToken(idUser)
+        const user = await userRepository.getByIdWithRefreshToken(idUser)
 
         return (user && user.refreshToken === refreshToken)
 
