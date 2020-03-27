@@ -1,11 +1,16 @@
-//import modules
 const path = require('path')
-require('dotenv').config({
-    path: path.join(__dirname, '.env')
-});
 const express = require('express')
 const cors = require('cors')
 const app = express()
+
+if (process.env.NODE_ENV !== 'testing') {
+    require('dotenv').config({
+        path: path.join(__dirname, '.env')
+    });
+}
+
+
+
 
 //database connect
 require('./app/framework/database/db.connect')

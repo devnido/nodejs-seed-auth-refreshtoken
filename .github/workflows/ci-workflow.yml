@@ -1,0 +1,48 @@
+name: Node.js - Mongodb CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+        mongodb-version: [4.x]
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.1.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
+
+    - run: npm ci
+    
+    - run: npm test
+      env:
+        CI: true
+        APP_NAME: SEED AUTH API
+        NODE_ENV: testing
+        APP_LOCAL_IP: 0.0.0.0
+        APP_LOCAL_PORT: 3000
+        APP_PREFIX_API_URL: /api
+        APP_VERSION_API: /v1
+        APP_BASE_URL: http://0.0.0.0:4200
+        APP_RESOURCE_BASE_URL: http://0.0.0.0:5000
+        APP_AUTH_BASE_URL: http://0.0.0.0:3000
+        APP_TOKEN_AUTH_SECRET: miclaveauthultrasecreta
+        APP_TOKEN_API_SECRET: miclaveapiultrasecreta
+        DB_AUTH_DRIVER: mongodb
+        DB_AUTH_HOST: 127.0.0.1
+        DB_AUTH_PORT: 27017
+        DB_AUTH_DATABASE: exampledb
+        APP_SETTINGS_PASS_SALT: 8
