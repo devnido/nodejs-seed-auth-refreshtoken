@@ -8,7 +8,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         .custom((email) => {
             return userService.existsByEmail(email)
                 .then(result => {
-                    console.log(result);
+                    console.log(result)
 
                     if (result) {
                         return Promise.reject('El email ya está registrado')
@@ -17,7 +17,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                     }
                 })
                 .catch(err => {
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El email ya está registrado'),
 
@@ -41,9 +41,9 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         .custom((password, { req }) => {
             if (password !== req.body.confirmPassword) {
                 // trow error if passwords do not match
-                throw new Error("Nueva contraseña y Confirmar contraseña deben ser iguales");
+                throw new Error("Nueva contraseña y Confirmar contraseña deben ser iguales")
             } else {
-                return password;
+                return password
             }
         }),
 
@@ -60,7 +60,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El captcha es incorrecto'),
 
@@ -86,7 +86,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El captcha es incorrecto'),
 
@@ -111,7 +111,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El email no existe'),
 
@@ -128,7 +128,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El captcha es incorrecto'),
 
@@ -151,7 +151,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El token no es válido'),
 
@@ -172,9 +172,9 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         }).withMessage('Debe contener como minimo 6 caracteres')
         .custom((password, { req }) => {
             if (password !== req.body.confirmPassword) {
-                throw new Error("Las contraseñas no coinciden");
+                throw new Error("Las contraseñas no coinciden")
             } else {
-                return password;
+                return password
             }
         }),
 
@@ -191,7 +191,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El captcha es incorrecto'),
 
@@ -212,7 +212,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El email no existe'),
 
@@ -239,7 +239,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                 })
                 .catch(err => {
 
-                    throw new Error(err);
+                    throw new Error(err)
                 })
         }).withMessage('El email no existe'),
 
@@ -247,6 +247,4 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
     ]
 })
 
-
-
-module.exports = validator;
+module.exports = validator
