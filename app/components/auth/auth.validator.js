@@ -1,7 +1,3 @@
-const errorHandler = require('../../framework/middlewares/error-handler.middleware');
-const userService = require('../users/user.service');
-const captchaService = require('../../framework/services/recaptcha.service');
-
 const {
     check,
     body,
@@ -10,8 +6,7 @@ const {
     header
 } = require('express-validator')
 
-
-const validator = {
+const validator = ({ errorHandler, userService, recaptchaService }) => ({
     register: [
         check(['email', 'name']).trim().escape(),
 
@@ -211,8 +206,6 @@ const validator = {
     refreshTheJwt: [
         check(['idUser', 'refresh', 'authorization']).trim().escape(),
 
-
-
         param('idUser').isMongoId().withMessage('El id del usuario no es válido')
         .custom((idUser) => {
             return userService.existsById(idUser)
@@ -258,7 +251,7 @@ const validator = {
 
         errorHandler.validation(validationResult)
     ]
-}
+})
 
 
 

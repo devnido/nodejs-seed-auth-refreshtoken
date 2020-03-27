@@ -1,12 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken')
-const moment = require('moment')
-const config = require('../config/env')
 const randToken = require('rand-token')
 
-
-
-
-const service = {
+const service = ({ config }) => ({
 
     generateRefreshToken: async() => {
 
@@ -82,6 +77,6 @@ const service = {
 
     }
 
-}
+})
 
 module.exports = service

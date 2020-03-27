@@ -1,6 +1,5 @@
-const User = require('./user.model');
+const repository = ({ User }) => ({
 
-const repository = {
     existsByEmail: email => User.exists({ email: email }),
 
     existsById: id => User.exists({ _id: id }),
@@ -9,11 +8,11 @@ const repository = {
 
     findById: id => User.findById(id, { password: 0, refreshToken: 0, resetPassToken: 0 }),
 
-    findByEmail: email => User.findOne({ email: email }, { password: 0, refreshToken: 0, resetPassToken: 0 }),
+    findByEmail: email => User.findOne({ email }, { password: 0, refreshToken: 0, resetPassToken: 0 }),
 
     findByIdWithRefreshToken: id => User.findById(id, { password: 0, resetPassToken: 0 }),
 
-    getByResetPassToken: (resetPassToken, date) => User.findOne({ resetPassToken: resetPassToken, status: 'active', resetPassTokenExpDate: { $gt: date } }, { password: 0, refreshToken: 0 }),
+    getByResetPassToken: (resetPassToken, date) => User.findOne({ resetPassToken, status: 'active', resetPassTokenExpDate: { $gt: date } }, { password: 0, refreshToken: 0 }),
 
     findByEmailWithPassword: email => User.findById(id, { resetPassToken: 0, refreshToken: 0 }),
 
@@ -35,6 +34,6 @@ const repository = {
 
     delete: userId => User.findOneAndRemove({ _id: userId })
 
-}
+})
 
 module.exports = repository;

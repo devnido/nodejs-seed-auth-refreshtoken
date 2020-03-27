@@ -1,8 +1,5 @@
-const userService = require('../users/user.service');
-const tokenService = require('../../framework/services/token.service');
-const emailService = require('../../framework/services/email.service')
+const controller = ({ userService, tokenService, emailService }) => ({
 
-const controller = {
     register: (email, name, password) => {
 
         return userService.register(email, name, password)
@@ -80,6 +77,6 @@ const controller = {
         }
         return { status }
     }
-}
+})
 
 module.exports = controller;

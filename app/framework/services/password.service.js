@@ -1,7 +1,6 @@
-const bcrypt = require('bcryptjs');
-const config = require('../config/env');
+const bcrypt = require('bcryptjs')
 
-const service = {
+const service = ({ config }) => ({
 
     generateRandomPassword: () => Math.random().toString(36).slice(-8),
 
@@ -10,9 +9,10 @@ const service = {
     hashPassword: (password) => {
 
         const salt = parseInt(config.app.passwordSalt);
+
         return bcrypt.hashSync(password, salt);
 
     }
-};
+})
 
 module.exports = service;

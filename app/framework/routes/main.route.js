@@ -1,14 +1,11 @@
-const routeAuth = require('../../components/auth/auth.route');
-const config = require('../config/env');
-
-var route = {
+const routes = ({ config, authRoute }) => ({
 
     init: (express, app) => {
 
-        var router = express.Router();
+        const router = express.Router();
 
         /* routes list */
-        routeAuth.init(router);
+        authRoute.init(router);
 
         const prefixApiUrl = config.app.urlApiPrefix; /* api/ */
         const prefixVersionApi = config.app.urlVersionPrefix; /* v1/ */
@@ -19,6 +16,6 @@ var route = {
         app.use(prefix, router);
 
     }
-}
+})
 
-module.exports = route
+module.exports = routes

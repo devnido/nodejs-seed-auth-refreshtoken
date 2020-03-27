@@ -1,7 +1,5 @@
-const userRepository = require('./user.repository');
-const passwordService = require('../../framework/services/password.service');
+const service = ({ userRepository, passwordService }) => ({
 
-const service = {
     register: async(email, name, password) => {
 
         const hashedPassword = passwordService.hashPassword(password);
@@ -109,6 +107,6 @@ const service = {
 
     }
 
-}
+})
 
 module.exports = service;

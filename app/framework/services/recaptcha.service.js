@@ -1,7 +1,6 @@
 const request = require('request-promise-native')
-const config = require('../config/env')
 
-const service = {
+const service = ({ config }) => ({
 
     verifyCaptcha: async(captcha) => {
 
@@ -14,6 +13,6 @@ const service = {
         return result && result.success;
     }
 
-}
+})
 
 module.exports = service;
