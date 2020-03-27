@@ -10,7 +10,7 @@ Está desarrollado en [Node.js](https://nodejs.org/es/) versión v12.13.0 y [mon
 
 ## Uso 
 
-1. Para ejecutar este código es no necesario ejecutar previamente los otros dos proyectos back-end y front-end, pero se recomienda utilizarlos para enternder mejor su funcionamiento. [servidor de fuente de datos](https://github.com/devnido/seed-resource-api-nodejs) y [panel de administración](https://github.com/devnido/seed-admin-panel-angular). 
+1. Para ejecutar este código no es necesario ejecutar previamente los otros dos proyectos back-end y front-end, pero se recomienda utilizarlos para entender mejor su funcionamiento. [servidor de fuente de datos](https://github.com/devnido/seed-resource-api-nodejs) y [panel de administración](https://github.com/devnido/seed-admin-panel-angular). 
 
 2. Descarga el código en tu computador.
 
