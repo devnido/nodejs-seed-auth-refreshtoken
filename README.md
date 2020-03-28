@@ -1,5 +1,7 @@
 # Seed Auth Api Node.js
 
+[![Actions Status](https://github.com/{owner}/{repo}/workflows/{workflow_name}/badge.svg)](https://github.com/{owner}/{repo}/actions)
+
 ## Este proyecto fue creado para utilizar como base en futuros desarrollos que utilicen caracteristicas similares.
 
 Proyecto base que forma parte de otros 2 adicionales para crear un sistema en conjunto. El código del repositorio actual es el back-end que sirve para levantar un servidor de autenticación el cual tiene como función principal validar y/o restringir el acceso de los usuarios al [servidor de fuente de datos](https://github.com/devnido/seed-resource-api-nodejs) mediante el uso de tokens de acceso (json web token y refresh token). Adicionalmente se puede integrar con este [panel de administración](https://github.com/devnido/seed-admin-panel-angular)
