@@ -1,4 +1,4 @@
-name: Continous Integration Workflow
+name: Continuous Integration Workflow
 
 on: 
   push:
