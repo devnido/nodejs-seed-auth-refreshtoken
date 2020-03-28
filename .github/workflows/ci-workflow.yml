@@ -1,6 +1,9 @@
-name: Node.js - Mongodb CI
+name: Continous Integration Workflow
 
-on: [push]
+on: 
+  push:
+    branches:
+      - master
 
 jobs:
   build:
