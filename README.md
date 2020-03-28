@@ -1,6 +1,6 @@
 # Seed Auth Api Node.js
 
-[![Actions Status](https://github.com/devnido/seed-auth-api-nodejs/workflows/Node.js - Mongodb CI/badge.svg)](https://github.com/devnido/seed-auth-api-nodejs/actions)
+![Node.js - Mongodb CI](https://github.com/devnido/seed-auth-api-nodejs/workflows/Node.js%20-%20Mongodb%20CI/badge.svg)
 
 ## Este proyecto fue creado para utilizar como base en futuros desarrollos que utilicen caracteristicas similares.
 
