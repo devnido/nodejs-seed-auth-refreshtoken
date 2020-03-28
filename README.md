@@ -1,6 +1,6 @@
 # Seed Auth Api Node.js
 
-![Node.js - Mongodb CI](https://github.com/devnido/seed-auth-api-nodejs/workflows/Node.js%20-%20Mongodb%20CI/badge.svg)
+![Continuous Integration Workflow](https://github.com/devnido/seed-auth-api-nodejs/workflows/Continuous%20Integration%20Workflow/badge.svg)
 
 ## Este proyecto fue creado para utilizar como base en futuros desarrollos que utilicen caracteristicas similares.
 
