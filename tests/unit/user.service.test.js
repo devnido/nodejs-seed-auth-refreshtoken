@@ -5,8 +5,8 @@ const userMock = require('../mocks/user.mock')
 const userDbMock = require('../mocks/userdb.mock')
 
 let userService = require('../../app/components/users/user.service')
-let userRepositoryMock = {}
-let passwordServiceMock = {}
+let userRepository = {}
+let passwordService = {}
 let user = {}
 let service = {}
 
@@ -100,17 +100,6 @@ describe('Testing user service', () => {
             })
     })
 
-    it('Should return true if user exists by id', function(done) {
-        service.existsById(user._id)
-            .then(result => {
-                expect(result).equals(true)
-                done()
-            })
-            .catch(e => {
-                done(e)
-            })
-    })
-
     it('Should return true if user exists by reset pass token', function(done) {
 
         user.resetPassToken = "ajsdjkasj"
@@ -141,7 +130,7 @@ describe('Testing user service', () => {
             })
     })
 
-    it('Should return a user if find by email', function(done) {
+    it('Should return a user if find by reset pass token', function(done) {
 
         user.resetPassToken = "asdasdasdasdasdadada"
 
@@ -278,8 +267,8 @@ describe('Testing user service', () => {
     })
 
     afterEach('Clean functions', function() {
-        userRepositoryMock = {}
-        passwordServiceMock = {}
+        userRepository = {}
+        passwordService = {}
         user = {}
         service = {}
     })

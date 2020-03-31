@@ -6,6 +6,7 @@
     "scripts": {
         "start": "node app.js",
         "test": "node ./node_modules/mocha/bin/mocha tests/**/*.test.js",
+        "test:unit": "node ./node_modules/mocha/bin/mocha tests/unit/**/*.test.js",
         "dev": "nodemon app.js"
     },
     "author": "devnido",

@@ -6,5 +6,6 @@ module.exports = {
     status: "active",
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    refreshToken: "cYVCc3DLN3YmZ9Ws369m7pRxvF5jFheEdelMOfeI3K6ev0TBHlAnqNGGeoSTHDir9Y5GPfxn2deMT20Mz0uOT85z6UiDMwzPeyapmTI0oMRUAes2tzlrB6Ds7d2AunZP"
+    refreshToken: "cYVCc3DLN3YmZ9Ws369m7pRxvF5jFheEdelMOfeI3K6ev0TBHlAnqNGGeoSTHDir9Y5GPfxn2deMT20Mz0uOT85z6UiDMwzPeyapmTI0oMRUAes2tzlrB6Ds7d2AunZP",
+    resetPassToken: "resetpasstoken"
 }

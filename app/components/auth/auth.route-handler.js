@@ -148,6 +148,7 @@ const handler = ({ authController }) => ({
                     jwt: 'Bearer ' + newJwt
                 }
             }
+
             res.status(200).json(response);
 
         } catch (err) {
@@ -177,7 +178,7 @@ const handler = ({ authController }) => ({
                 ok: true,
                 content: {
                     message: 'verify success',
-                    status: status
+                    status
                 }
             }
 
