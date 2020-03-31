@@ -50,7 +50,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         body('captcha')
         .exists().withMessage('email is obligatorio')
         .custom((captcha) => {
-            return captchaService.verifyCaptcha(captcha)
+            return recaptchaService.verifyCaptcha(captcha)
                 .then(result => {
                     if (result) {
 
@@ -76,7 +76,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         body('captcha')
         .exists().withMessage('email is obligatorio')
         .custom((captcha) => {
-            return captchaService.verifyCaptcha(captcha)
+            return recaptchaService.verifyCaptcha(captcha)
                 .then(result => {
                     if (result) {
 
@@ -118,7 +118,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         body('captcha')
         .exists().withMessage('email is obligatorio')
         .custom((captcha) => {
-            return captchaService.verifyCaptcha(captcha)
+            return recaptchaService.verifyCaptcha(captcha)
                 .then(result => {
                     if (result) {
 
@@ -181,7 +181,7 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         body('captcha')
         .exists().withMessage('email is obligatorio')
         .custom((captcha) => {
-            return captchaService.verifyCaptcha(captcha)
+            return recaptchaService.verifyCaptcha(captcha)
                 .then(result => {
                     if (result) {
 
