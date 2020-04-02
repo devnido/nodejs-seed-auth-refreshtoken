@@ -10,7 +10,7 @@ let passwordService = {}
 let user = {}
 let service = {}
 
-describe('Testing user service', () => {
+describe('Testing User Service - Unit Tests', () => {
 
 
     beforeEach('Prepare functions', function() {

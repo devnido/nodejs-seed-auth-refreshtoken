@@ -9,7 +9,7 @@ const userRepository = require('../../app/components/users/user.repository')
 
 const repository = userRepository({ User })
 
-describe('Testing user repository', function() {
+describe('Testing User Repository with Mongodb - Integration Tests', function() {
 
     before('database connect', function(done) {
 

@@ -9,7 +9,7 @@ let authController = {}
 let user = {}
 let routeHandler = {}
 
-describe('Testing auth controller', () => {
+describe('Testing Auth Route Handler  - Unit Tests', () => {
 
     beforeEach('Prepare functions', function() {
 

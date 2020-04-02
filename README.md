@@ -26,7 +26,7 @@ Está desarrollado en [Node.js](https://nodejs.org/es/) versión v12.13.0 y [mon
 
 ## Tests
 
-El directiorio **/test** contiene integration tests y unti tests cada uno en su respectiva carpeta.
+El directiorio **/test** contiene integration tests y unit tests cada uno en su respectiva carpeta.
 
 Para ejecutar integration test es necesario tener el servicio de mongodb funcionando `mongod`
 

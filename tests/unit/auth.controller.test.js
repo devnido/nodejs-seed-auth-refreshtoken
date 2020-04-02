@@ -11,7 +11,7 @@ let emailService = {}
 let user = {}
 let service = {}
 
-describe('Testing auth controller', () => {
+describe('Testing Auth Controller - Unit Tests', () => {
 
 
 

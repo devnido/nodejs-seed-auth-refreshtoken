@@ -13,7 +13,7 @@ let jwt
 let userDB
 let server
 
-describe('Testing Auth API Rest - integration test', () => {
+describe('Testing Auth API Rest - Integration Tests', () => {
 
     before('database connect', function(done) {
 
