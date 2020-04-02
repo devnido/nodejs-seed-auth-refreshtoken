@@ -10,7 +10,7 @@ const repository = ({ User }) => ({
 
     getByEmail: email => User.findOne({ email }, { password: 0, refreshToken: 0, resetPassToken: 0 }),
 
-    getByIdWithRefreshToken: id => User.findById(id, { password: 0, resetPassToken: 0 }),
+    getByIdWithRefreshToken: (id, date) => User.findOne({ _id: id, refreshTokenExpDate: { $gt: date } }, { password: 0, resetPassToken: 0 }),
 
     getByResetPassToken: (resetPassToken, date) => User.findOne({ resetPassToken, status: 'active', resetPassTokenExpDate: { $gt: date } }, { password: 0, refreshToken: 0 }),
 

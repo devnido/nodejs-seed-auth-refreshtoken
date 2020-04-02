@@ -8,7 +8,6 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
         .custom((email) => {
             return userService.existsByEmail(email)
                 .then(result => {
-                    console.log(result)
 
                     if (result) {
                         return Promise.reject('El email ya está registrado')
@@ -242,6 +241,11 @@ const validator = ({ errorHandler, userService, recaptchaService }) => ({
                     throw new Error(err)
                 })
         }).withMessage('El email no existe'),
+
+        body('refresh')
+        .exists({
+            checkFalsy: true
+        }).withMessage('El refresh token es obligatorio'),
 
         errorHandler.validation(validationResult)
     ]

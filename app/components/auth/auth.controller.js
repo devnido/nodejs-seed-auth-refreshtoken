@@ -24,9 +24,16 @@ const controller = ({ userService, tokenService, emailService }) => ({
 
         const result = await userService.storeResetPassToken(user._id, resetPassToken);
 
-        const resultSentEmail = await emailService.sendResetPassEmail(email, user.name, resetPassToken)
+        let resultSentEmail
 
-        return (resultSentEmail && resultSentEmail.response.includes('250 OK'))
+        if (process.env.NODE_ENV !== 'testing') {
+            resultSentEmail = await emailService.sendResetPassEmail(email, user.name, resetPassToken)
+        } else {
+            resultSentEmail = true
+        }
+
+
+        return (result && resultSentEmail)
 
     },
     recoveryPassword: async(resetPassToken, password) => {

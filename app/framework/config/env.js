@@ -41,7 +41,8 @@ const config = {
     },
     recaptcha: {
         site: process.env.RECAPTCHA_SITE_VERIFY,
-        key: process.env.RECAPTCHA_PRIVATE_KEY
+        key: process.env.RECAPTCHA_PRIVATE_KEY,
+        key_test: process.env.RECAPTCHA_PRIVATE_KEY_TEST
     }
 }
 

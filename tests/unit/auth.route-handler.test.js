@@ -160,7 +160,7 @@ describe('Testing auth controller', () => {
         const response = {
             ok: true,
             content: {
-                message: 'verify success',
+                message: 'Successful Verification',
                 status: 'active'
             }
         }

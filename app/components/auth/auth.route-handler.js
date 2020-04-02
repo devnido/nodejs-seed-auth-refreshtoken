@@ -3,12 +3,13 @@ const handler = ({ authController }) => ({
 
         try {
 
-            const { email, name, password } = req.body;
+            const { email, name, password } = req.body
 
-            const user = await authController.register(email, name, password);
+            const user = await authController.register(email, name, password)
 
             if (!user) {
-                next({ error: 'error en register', status: 500 });
+                next({ error: 'error en register', status: 500 })
+                return
             }
 
             const response = {
@@ -19,7 +20,7 @@ const handler = ({ authController }) => ({
                 }
             }
 
-            res.status(200).json(response);
+            return res.status(200).json(response)
 
         } catch (error) {
             next({ error, status: 500 })
@@ -29,15 +30,15 @@ const handler = ({ authController }) => ({
 
         try {
 
-            const { email, password } = req.body;
+            const { email, password } = req.body
 
-            const loginResult = await authController.loginAndGenerateTokens(email, password);
+            const loginResult = await authController.loginAndGenerateTokens(email, password)
 
             if (!loginResult) {
-                next({ error: 'invalid user or password', status: 401 });
+                next({ error: 'invalid user or password', status: 401 })
+                return
             }
-
-            const { user, refresh, jwt } = loginResult;
+            const { user, refresh, jwt } = loginResult
 
             if (refresh && jwt && user) {
 
@@ -46,24 +47,24 @@ const handler = ({ authController }) => ({
                     content: { message: 'Login Success', user, jwt, refresh }
                 }
 
-                res.status(200).json(response);
+                return res.status(200).json(response)
             } else {
                 //next(err) status 
-                next({ error: 'error en loginAndGenerateTokens ', status: 500 });
+                next({ error: 'error en loginAndGenerateTokens ', status: 500 })
+                return
             }
         } catch (err) {
-            next(err);
+            next(err)
         }
     },
     forgot: async(req, res, next) => {
 
         try {
 
-            const { email } = req.body;
+            const { email } = req.body
 
             // result = { changeToken: kasjdkjasdjkaskdjsa }
-            const result = await authController.forgotPassword(email);
-
+            const result = await authController.forgotPassword(email)
 
             if (!result) {
                 next({
@@ -78,7 +79,7 @@ const handler = ({ authController }) => ({
                     message: 'Email enviado exitosamente'
                 }
             }
-            res.status(200).json(response);
+            return res.status(200).json(response)
 
         } catch (err) {
             next({
@@ -92,11 +93,11 @@ const handler = ({ authController }) => ({
 
         try {
 
-            const { resetToken } = req.params;
-            const { password } = req.body;
+            const { resetToken } = req.params
+            const { password } = req.body
 
             // result = { changeToken: kasjdkjasdjkaskdjsa }
-            const result = await authController.recoveryPassword(resetToken, password);
+            const result = await authController.recoveryPassword(resetToken, password)
 
             if (!result) {
                 next({
@@ -111,7 +112,7 @@ const handler = ({ authController }) => ({
                     message: 'Contraseña restablecida exitosamente'
                 }
             }
-            res.status(200).json(response);
+            return res.status(200).json(response)
 
         } catch (err) {
             next({
@@ -125,14 +126,14 @@ const handler = ({ authController }) => ({
 
         try {
 
-            const bearer = req.headers.authorization;
+            const bearer = req.headers.authorization
 
-            const { idUser } = req.params;
+            const { idUser } = req.params
 
-            const { refresh } = req.body;
+            const { refresh } = req.body
 
             // result = { newJwt: kasjdkjasdjkaskdjsa }
-            const newJwt = await authController.refreshTheJwt(idUser, bearer, refresh);
+            const newJwt = await authController.refreshTheJwt(idUser, bearer, refresh)
 
             if (!newJwt) {
                 next({
@@ -149,7 +150,7 @@ const handler = ({ authController }) => ({
                 }
             }
 
-            res.status(200).json(response);
+            return res.status(200).json(response)
 
         } catch (err) {
             next({
@@ -163,12 +164,12 @@ const handler = ({ authController }) => ({
 
         try {
 
-            const { refresh } = req.headers
+            const { refresh } = req.body
 
             const { idUser } = req.params
 
             // result = { status: 'inactive' || status: 'active' }
-            const { status } = await authController.verifyUser(idUser, refresh);
+            const { status } = await authController.verifyUser(idUser, refresh)
 
             if (!status) {
                 next({ error: 'error en auth.route.verify', status: 500 })
@@ -177,12 +178,12 @@ const handler = ({ authController }) => ({
             const response = {
                 ok: true,
                 content: {
-                    message: 'verify success',
+                    message: 'Successful Verification',
                     status
                 }
             }
 
-            res.status(200).json(response);
+            return res.status(200).json(response)
 
 
         } catch (err) {

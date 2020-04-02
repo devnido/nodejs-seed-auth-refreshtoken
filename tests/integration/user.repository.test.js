@@ -34,7 +34,7 @@ describe('Testing user repository', function() {
         userMock.resetPassToken = "asjdjakshdakjsdhjkas"
         userMock.resetPassTokenExpDate = Date.now() + 1000 * 60 * 2 // 2 minutes in milliseconds
         userMock.refreshToken = "asjdhaskjdajkdhakj"
-
+        userMock.refreshTokenExpDate = Date.now() + 1000 * 60 * 2
         User.create(userMock)
             .then(result => {
                 done()
@@ -150,9 +150,9 @@ describe('Testing user repository', function() {
             })
     });
 
-    it("Should return a user that contains refresh token if find by id ", function(done) {
+    it("Should return a user that contains refresh token", function(done) {
 
-        repository.getByIdWithRefreshToken(userMock._id)
+        repository.getByIdWithRefreshToken(userMock._id, Date.now())
             .then(user => {
 
                 expect(user.refreshToken).equals("asjdhaskjdajkdhakj")

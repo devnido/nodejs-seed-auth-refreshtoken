@@ -2,12 +2,13 @@
     "name": "seed-auth-api",
     "version": "1.0.0",
     "description": "Proyecto base para levantar un API REST en Node JS (servidor de autenticación)",
-    "main": "app.js",
+    "main": "index.js",
     "scripts": {
-        "start": "node app.js",
+        "start": "node index.js",
         "test": "node ./node_modules/mocha/bin/mocha tests/**/*.test.js",
         "test:unit": "node ./node_modules/mocha/bin/mocha tests/unit/**/*.test.js",
-        "dev": "nodemon app.js"
+        "test:api": "node ./node_modules/mocha/bin/mocha tests/integration/auth.api.test.js",
+        "dev": "nodemon index.js"
     },
     "author": "devnido",
     "license": "ISC",
@@ -30,6 +31,7 @@
         "chai": "^4.2.0",
         "mocha": "^7.1.1",
         "morgan": "^1.9.1",
-        "sinon": "^9.0.1"
+        "sinon": "^9.0.1",
+        "supertest": "^4.0.2"
     }
 }

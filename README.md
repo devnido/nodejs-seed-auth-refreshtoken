@@ -24,6 +24,21 @@ Está desarrollado en [Node.js](https://nodejs.org/es/) versión v12.13.0 y [mon
 
 6. Para ejecutar el código puedes usar `npm run dev` para que se ejecute con nodemon
 
+## Tests
+
+El directiorio **/test** contiene integration tests y unti tests cada uno en su respectiva carpeta.
+
+Para ejecutar integration test es necesario tener el servicio de mongodb funcionando `mongod`
+
+Las variables para el entorno de testing estan definidas en el archivo **.env.testing** el cual es necesario para los test de integración
+
+Para ejecutar unit test `npm run test:unit`
+
+Para ejecutar integration tests `npm run test:api`
+
+Para ejecutar todos los tests `npm test`
+
+
 ## Funcionalidades implementadas 
 
 1. Registro de usuarios.
@@ -32,6 +47,6 @@ Está desarrollado en [Node.js](https://nodejs.org/es/) versión v12.13.0 y [mon
 4. Actualización de json web token caducado utilizando un refresh token.
 5. Validaciones de autenticación con reCaptcha.
 
-## Documentación de la API y Tests
+## Documentación de la API 
 
 #### Proximamente...

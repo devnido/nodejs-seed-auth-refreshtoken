@@ -31,13 +31,13 @@ const service = ({ userRepository, passwordService }) => ({
 
             user = user.toObject();
 
-
             delete user.refreshToken
             delete user.refreshTokenExpDate
 
             delete user.resetPassToken
             delete user.resetPassTokenExpDate
 
+            delete user.password
 
             return user
         } else {
@@ -84,7 +84,7 @@ const service = ({ userRepository, passwordService }) => ({
     },
     hasRefreshToken: async(idUser, refreshToken) => {
 
-        const user = await userRepository.getByIdWithRefreshToken(idUser)
+        const user = await userRepository.getByIdWithRefreshToken(idUser, Date.now())
 
         return (user && user.refreshToken === refreshToken)
 

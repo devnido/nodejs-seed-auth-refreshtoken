@@ -43,7 +43,7 @@ describe('Testing auth controller', () => {
         }
 
         emailService = {
-            sendResetPassEmail: sinon.stub().withArgs("user@email.com", "user", "resetpasstoken").resolves({ response: "250 OK" })
+            sendResetPassEmail: sinon.stub().withArgs("user@email.com", "user", "resetpasstoken").resolves(true)
         }
 
         controller = authController({ userService, tokenService, emailService })

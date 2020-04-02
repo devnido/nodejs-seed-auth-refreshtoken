@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer')
 
 const service = ({ config, emailTemplate }) => ({
 
-    sendResetPassEmail: (emailTo, name, resetPassToken) => {
+    sendResetPassEmail: async(emailTo, name, resetPassToken) => {
 
         const baseUrl = config.app.baseUrl
 
@@ -23,12 +23,14 @@ const service = ({ config, emailTemplate }) => ({
             }
         });
 
-        return transporter.sendMail({
+        const resultEmailSent = await transporter.sendMail({
             from: `${config.email.name} <${config.email.from}>`,
             to: emailTo,
             subject: subject,
             html: contentHTML
         })
+
+        return resultEmailSent.response.includes('250 OK')
 
     }
 
