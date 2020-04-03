@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '../../.env.testing') })
 const bcrypt = require('bcryptjs')
 
 const expect = require('chai').expect
@@ -7,26 +8,19 @@ const userMock = require('../mocks/user.mock')
 const User = require('../../app/components/users/user.model')
 const userRepository = require('../../app/components/users/user.repository')
 
+const { db, string, options } = require('../../app/framework/database/db.connect')
+
 const repository = userRepository({ User })
 
 describe('Testing User Repository with Mongodb - Integration Tests', function() {
 
     before('database connect', function(done) {
 
-        mongoose.connect('mongodb://0.0.0.0:27017/seedauthtestdb', {
-                useNewUrlParser: true,
-                useCreateIndex: true,
-                useFindAndModify: false,
-                useUnifiedTopology: true
-            })
-            .then(() => {
-                done()
-            })
-            .catch(e => {
-                done(e)
-            })
+        db.connect(string, options)
+            .then(() => done())
+            .catch(e => done(e))
 
-    });
+    })
 
     beforeEach('populate users collection', function(done) {
 
@@ -40,11 +34,11 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
                 done()
             })
             .catch(e => {
-                console.log(e);
+                console.log(e)
                 done(e)
             })
 
-    });
+    })
 
     it("Should return true if user exists by id", function(done) {
 
@@ -59,7 +53,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
                 console.log(e)
                 done(e)
             })
-    });
+    })
 
     it("Should return false if user does not exists by id", function(done) {
 
@@ -74,7 +68,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
                 console.log(e)
                 done(e)
             })
-    });
+    })
 
     it("Should return true if user exists by email", function(done) {
 
@@ -89,7 +83,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
                 console.log(e)
                 done(e)
             })
-    });
+    })
 
     it("Should return false if user does not exists by email", function(done) {
 
@@ -104,7 +98,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
                 console.log(e)
                 done(e)
             })
-    });
+    })
 
     it("Should return an user by id", function(done) {
 
@@ -120,7 +114,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should return an user by valid reset pass token", function(done) {
 
@@ -134,7 +128,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should return false if find a user by expired reset pass token", function(done) {
 
@@ -148,7 +142,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should return a user that contains refresh token", function(done) {
 
@@ -162,7 +156,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should return a user if find by expired reset pass token", function(done) {
 
@@ -178,7 +172,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should return a user with password if find by email", function(done) {
 
@@ -192,7 +186,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should insert a user", function(done) {
 
@@ -211,7 +205,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should update a user setting new refresh token", function(done) {
 
@@ -225,7 +219,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should update a user setting new reset pass token", function(done) {
 
@@ -239,7 +233,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should update a user removing reset pass token", function(done) {
 
@@ -253,7 +247,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should update a user removing reset pass token", function(done) {
 
@@ -267,7 +261,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should update a user removing refresh token", function(done) {
 
@@ -281,7 +275,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     it("Should update a user removing refresh token", function(done) {
 
@@ -295,7 +289,7 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             .catch(e => {
                 done(e)
             })
-    });
+    })
 
     afterEach('clean articles collection', function(done) {
 
@@ -305,18 +299,14 @@ describe('Testing User Repository with Mongodb - Integration Tests', function() 
             })
             .catch(err => {
                 done(err)
-            });
-    });
+            })
+    })
 
     after('database disconnect', function(done) {
 
-        mongoose.disconnect()
-            .then(() => {
-                done()
-            })
-            .catch(err => {
-                done(err)
-            })
-    });
+        db.disconnect()
+            .then(() => done())
+            .catch(err => done(err))
+    })
 
-});
+})

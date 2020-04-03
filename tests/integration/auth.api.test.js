@@ -1,6 +1,7 @@
+const bcrypt = require('bcryptjs')
 const path = require('path')
 require('dotenv').config({ path: path.join(__dirname, '../../.env.testing') })
-const bcrypt = require('bcryptjs')
+
 const { app } = require('../../app/framework/startup/app')
 const { db, string, options } = require('../../app/framework/database/db.connect')
 

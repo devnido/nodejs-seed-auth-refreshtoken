@@ -47,5 +47,5 @@ jobs:
         DB_AUTH_DRIVER: mongodb
         DB_AUTH_HOST: 127.0.0.1
         DB_AUTH_PORT: 27017
-        DB_AUTH_DATABASE: exampledb
+        DB_AUTH_DATABASE: testingdb
         APP_SETTINGS_PASS_SALT: 8

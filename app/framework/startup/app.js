@@ -10,7 +10,7 @@ const config = container.resolve('config')
 app.set('env', config.app.env)
 app.set('ip', config.app.ip)
 app.set('port', config.app.port)
-app.set('trust proxy', true) // añadir configuracion al nginx
+app.set('trust proxy', true) // añadir configuracion a nginx
 app.disable('x-powered-by')
 
 //middlewares
@@ -20,9 +20,7 @@ const error = container.resolve('errorHandler')
 
 app.use(express.json())
 app.use(error.bodyParser)
-app.use(express.urlencoded({
-    extended: false
-}));
+app.use(express.urlencoded({ extended: true }))
 
 //morgan development
 let morgan = ''
