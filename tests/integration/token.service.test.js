@@ -1,6 +1,5 @@
-
-const chai = require('chai');
-const chaiJwt = require('chai-jwt');
+const chai = require('chai')
+const chaiJwt = require('chai-jwt')
 chai.use(chaiJwt)
 const { expect } = chai
 
@@ -20,7 +19,7 @@ let expiredJwt
 
 describe('Testing token service - Integration Testing', () => {
 
-    beforeEach('Prepare service', function () {
+    beforeEach('Prepare service', function() {
         service = tokenService({ jsonwebtoken, randToken, config })
 
         // generate expired jwt
@@ -37,7 +36,7 @@ describe('Testing token service - Integration Testing', () => {
 
     })
 
-    it('Should generate a string with random characters', function (done) {
+    it('Should generate a string with random characters', function(done) {
 
         service.generateRefreshToken()
             .then(result => {
@@ -48,7 +47,7 @@ describe('Testing token service - Integration Testing', () => {
             .catch(e => done(e))
     })
 
-    it('Should generate a string with random characters and ends with gt', function (done) {
+    it('Should generate a string with random characters and ends with gt', function(done) {
 
         service.generateResetPassToken()
             .then(result => {
@@ -60,7 +59,7 @@ describe('Testing token service - Integration Testing', () => {
             .catch(e => done(e))
     })
 
-    it('Should generate jwt with id user', function (done) {
+    it('Should generate jwt with id user', function(done) {
 
         const idUser = "45"
 
@@ -75,7 +74,7 @@ describe('Testing token service - Integration Testing', () => {
             .catch(e => done(e))
     })
 
-    it('Should return the content of jwt', function (done) {
+    it('Should return the content of jwt', function(done) {
 
         const idUser = "45"
 
@@ -93,7 +92,7 @@ describe('Testing token service - Integration Testing', () => {
 
     })
 
-    it('Should thow an error when jwt is expired', function (done) {
+    it('Should thow an error when jwt is expired', function(done) {
 
         service.verifyJwt(expiredJwt)
             .then(result => {
@@ -107,7 +106,7 @@ describe('Testing token service - Integration Testing', () => {
 
     })
 
-    it('Should thow an error when jwt is malformed', function (done) {
+    it('Should thow an error when jwt is malformed', function(done) {
 
         service.decode("asdsad")
             .then(result => {
@@ -119,7 +118,7 @@ describe('Testing token service - Integration Testing', () => {
             })
     })
 
-    it('Should return "expired" when jwt has expired', function (done) {
+    it('Should return "expired" when jwt has expired', function(done) {
 
         service.decode(expiredJwt)
             .then(result => {
@@ -133,7 +132,7 @@ describe('Testing token service - Integration Testing', () => {
             })
     })
 
-    it('Should return "active" when jwt has not expired', function (done) {
+    it('Should return "active" when jwt has not expired', function(done) {
         service.decode(validJwt)
             .then(result => {
                 expect(result).to.be.an('Object')
@@ -146,7 +145,7 @@ describe('Testing token service - Integration Testing', () => {
             })
     })
 
-    afterEach('Clean service', function () {
+    afterEach('Clean service', function() {
         service = null
         validJwt = null
         expiredJwt = null
