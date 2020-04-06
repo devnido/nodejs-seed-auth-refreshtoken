@@ -1,8 +1,6 @@
-const nodemailer = require('nodemailer')
+const service = ({ nodemailer, config, emailTemplate }) => ({
 
-const service = ({ config, emailTemplate }) => ({
-
-    sendResetPassEmail: async(emailTo, name, resetPassToken) => {
+    sendResetPassEmail: async (emailTo, name, resetPassToken) => {
 
         const baseUrl = config.app.baseUrl
 

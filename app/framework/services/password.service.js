@@ -1,6 +1,4 @@
-const bcrypt = require('bcryptjs')
-
-const service = ({ config }) => ({
+const service = ({ bcrypt, config }) => ({
 
     generateRandomPassword: () => Math.random().toString(36).slice(-8),
 

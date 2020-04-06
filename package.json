@@ -7,7 +7,7 @@
         "start": "node index.js",
         "test": "node ./node_modules/mocha/bin/mocha tests/**/*.test.js",
         "test:unit": "node ./node_modules/mocha/bin/mocha tests/unit/**/*.test.js",
-        "test:api": "node ./node_modules/mocha/bin/mocha tests/integration/auth.api.test.js",
+        "test:integration": "node ./node_modules/mocha/bin/mocha tests/integration/**/*.test.js",
         "dev": "nodemon index.js"
     },
     "author": "devnido",
@@ -28,6 +28,7 @@
     },
     "devDependencies": {
         "chai": "^4.2.0",
+        "chai-jwt": "^2.0.0",
         "mocha": "^7.1.1",
         "morgan": "^1.9.1",
         "sinon": "^9.0.1",

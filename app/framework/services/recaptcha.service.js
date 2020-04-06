@@ -1,8 +1,6 @@
-const request = require('request-promise-native')
+const service = ({ request, config }) => ({
 
-const service = ({ config }) => ({
-
-    verifyCaptcha: async(captcha) => {
+    verifyCaptcha: async (captcha) => {
 
         const apiKey = config.recaptcha.key
 

@@ -49,7 +49,7 @@ const error = {
         // const status = err.status;
         //loguear error
         // if (process.env.NODE_ENV == 'development') {
-        //console.log(err);
+        // console.log(err);
         //}
 
         next(err)

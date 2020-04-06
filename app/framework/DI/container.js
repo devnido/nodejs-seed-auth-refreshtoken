@@ -1,4 +1,4 @@
-const { createContainer, asFunction, asValue } = require('awilix')
+const { createContainer, asFunction, asValue, asClass } = require('awilix')
 
 const User = require('../../components/users/user.model')
 const userRepository = require('../../components/users/user.repository')
@@ -18,6 +18,14 @@ const tokenService = require('../services/token.service')
 const config = require('../config/env')
 const errorHandler = require('../middlewares/error-handler.middleware')
 const routes = require('../routes/main.route')
+
+// node_modules
+const jsonwebtoken = require('jsonwebtoken')
+const randToken = require('rand-token')
+const request = require('request-promise-native')
+const bcrypt = require('bcryptjs')
+const nodemailer = require('nodemailer')
+
 
 const container = createContainer()
 
@@ -47,6 +55,14 @@ container
     })
     .register({
         User: asValue(User)
+    })
+    // node_modules
+    .register({
+        jsonwebtoken: asValue(jsonwebtoken),
+        randToken: asValue(randToken),
+        request: asValue(request),
+        bcrypt: asValue(bcrypt),
+        nodemailer: asValue(nodemailer),
     })
 
 module.exports = container

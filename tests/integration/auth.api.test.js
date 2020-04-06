@@ -1,26 +1,35 @@
+const { expect } = require('chai')
+const request = require('supertest')
+
 const bcrypt = require('bcryptjs')
+const jsonwebtoken = require('jsonwebtoken')
 const path = require('path')
 require('dotenv').config({ path: path.join(__dirname, '../../.env.testing') })
 
 const { app } = require('../../app/framework/startup/app')
 const { db, string, options } = require('../../app/framework/database/db.connect')
-
-const request = require('supertest')
-const { expect } = require('chai')
+const config = require('../../app/framework/config/env')
 
 const User = require('../../app/components/users/user.model')
 
-let jwt
+let expiredJwt
 let userDB
 let server
 
 describe('Testing Auth API Rest - Integration Tests', () => {
 
-    before('database connect', function(done) {
+    before('database connect', function (done) {
 
         db.connect(string, options)
             .then(() => {
                 server = app.listen(3000, () => {
+
+                    const exp = Math.floor(Date.now() / 1000) - 2
+                    const payload = { uid: "5e376c66ce68605aa0ed1152", exp }
+                    const secret = config.app.secretAuth
+                    const options = { algorithm: 'HS256' }
+                    expiredJwt = `Bearer ${jsonwebtoken.sign(payload, secret, options)}`
+
                     done()
                 })
             })
@@ -28,9 +37,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
     })
 
-    beforeEach('populate users collection', function(done) {
-
-        jwt = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZTM3NmM2NmNlNjg2MDVhYTBlZDExNTIiLCJleHAiOjE1ODU4MDcwMTkzOTksImlhdCI6MTU4NTgwNjg5OX0.stL2qvkZmEX7MchOAaq7KE65f8LIhwza2vEtUa6FOuw"
+    beforeEach('populate users collection', function (done) {
 
         userDB = {
             _id: "5e376c66ce68605aa0ed1152",
@@ -76,7 +83,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
             captcha: ""
         }
 
-        it('Should return status 200 and the registered user', function(done) {
+        it('Should return status 200 and the registered user', function (done) {
 
             request(server)
                 .post('/api/v1/register')
@@ -95,13 +102,13 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
         })
 
-        it('Should return status 422 and validation errors - invalid email', function(done) {
+        it('Should return status 422 and validation errors - invalid email', function (done) {
 
-            const newUser = {...user }
+            const newUser = { ...user }
             newUser.email = 'emailincorrecto'
             request(server)
                 .post('/api/v1/register')
-                .send({...newUser })
+                .send({ ...newUser })
                 .expect(422)
                 .then(resp => {
                     expect(resp.body.ok).equals(false)
@@ -117,13 +124,13 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
         })
 
-        it('Should return status 422 and validation errors - email already exists', function(done) {
+        it('Should return status 422 and validation errors - email already exists', function (done) {
 
-            const newUser = {...user }
+            const newUser = { ...user }
             newUser.email = 'admin@admin.com'
             request(server)
                 .post('/api/v1/register')
-                .send({...newUser })
+                .send({ ...newUser })
                 .expect(422)
                 .then(resp => {
                     expect(resp.body.ok).equals(false)
@@ -143,7 +150,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
     describe('POST /login', () => {
 
-        it('Should return status 200 and user, resfresh token, json web token', function(done) {
+        it('Should return status 200 and user, resfresh token, json web token', function (done) {
 
             request(server)
                 .post('/api/v1/login')
@@ -167,7 +174,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
         })
 
-        it('Should return status 422 and validation errors - invalid email', function(done) {
+        it('Should return status 422 and validation errors - invalid email', function (done) {
 
             request(server)
                 .post('/api/v1/login')
@@ -187,7 +194,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
         })
 
-        it('Should return status 401 Unauthorized - invalid login', function(done) {
+        it('Should return status 401 Unauthorized - invalid login', function (done) {
 
             request(server)
                 .post('/api/v1/login')
@@ -210,7 +217,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
     describe('POST /forgot', () => {
 
 
-        it('Should return status 200 and success message', function(done) {
+        it('Should return status 200 and success message', function (done) {
 
             request(server)
                 .post('/api/v1/forgot')
@@ -232,7 +239,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
         })
 
-        it('Should return status 422 and validation errors - invalid email', function(done) {
+        it('Should return status 422 and validation errors - invalid email', function (done) {
 
             request(server)
                 .post('/api/v1/forgot')
@@ -251,7 +258,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
                 })
         })
 
-        it('Should return status 422 Unauthorized - user does not exists', function(done) {
+        it('Should return status 422 Unauthorized - user does not exists', function (done) {
 
             request(server)
                 .post('/api/v1/forgot')
@@ -274,7 +281,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
     describe('POST /recovery/:resetToken', () => {
 
-        it('Should return status 200 and success message', function(done) {
+        it('Should return status 200 and success message', function (done) {
 
             request(server)
                 .post('/api/v1/recovery/resetpasstoken')
@@ -310,7 +317,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
                 })
         })
 
-        it('Should return status 422 and validation errors - passwords are not equals', function(done) {
+        it('Should return status 422 and validation errors - passwords are not equals', function (done) {
 
             request(server)
                 .post('/api/v1/recovery/resetpasstoken')
@@ -330,7 +337,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
                 })
         })
 
-        it('Should return status 422 and validation errors - invalid reset pass token', function(done) {
+        it('Should return status 422 and validation errors - invalid reset pass token', function (done) {
 
             request(server)
                 .post('/api/v1/recovery/invalidresetpasstoken')
@@ -354,50 +361,31 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
     describe('POST /refresh/:idUser', () => {
 
-        it('Should return status 200 and success message', function(done) {
+        it('Should return status 200 and success message', function (done) {
 
             request(server)
                 .post('/api/v1/refresh/5e376c66ce68605aa0ed1152')
-                .set("authorization", jwt)
+                .set("authorization", expiredJwt)
                 .send({ refresh: "refreshtoken" })
                 .expect(200)
                 .then(resp => {
-
                     expect(resp.body.ok).equals(true)
                     expect(resp.body.content).to.be.an('Object')
                     expect(resp.body.content.message).equals('Successful Refresh')
                     expect(resp.body.content.jwt).to.be.an('String')
 
                     done()
-                        // return request(server)
-                        //     .post('/api/v1/login')
-                        //     .send({ email: "admin@admin.com", password: "qwerty", captcha: "" })
-                        //     .expect(200)
-
                 })
-                // .then(resp => {
-
-            //     expect(resp.body.ok).equals(true)
-            //     expect(resp.body.content).to.be.an('Object')
-            //     const { message, user, refresh, jwt } = resp.body.content
-            //     expect(message).equals('Login Success')
-            //     expect(user).to.include({ name: 'admin user', status: 'active', email: 'admin@admin.com' })
-            //     expect(user).to.not.have.property('password')
-            //     expect(refresh).to.be.an("String")
-            //     expect(jwt).to.be.an("String")
-            //     done()
-
-            // })
-            .catch(e => {
-                done(e)
-            })
+                .catch(e => {
+                    done(e)
+                })
         })
 
-        it('Should return status 422 and validation errors - user does not exists', function(done) {
+        it('Should return status 422 and validation errors - user does not exists', function (done) {
 
             request(server)
                 .post('/api/v1/refresh/5e376c66ce68605aa0ed1144')
-                .set("authorization", jwt)
+                .set("authorization", expiredJwt)
                 .send({ refresh: "refreshtoken" })
                 .expect(422)
                 .then(resp => {
@@ -414,11 +402,11 @@ describe('Testing Auth API Rest - Integration Tests', () => {
                 })
         })
 
-        it('Should return status 401 Unauthorized - refresh token does not belong to user', function(done) {
+        it('Should return status 401 Unauthorized - refresh token does not belong to user', function (done) {
 
             request(server)
                 .post('/api/v1/refresh/5e376c66ce68605aa0ed1152')
-                .set("authorization", jwt)
+                .set("authorization", expiredJwt)
                 .send({ refresh: "invalidrefreshtoken" })
                 .expect(401)
                 .then(resp => {
@@ -434,7 +422,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
                 })
         })
 
-        it('Should return status 401 and validation errors - jwt has not expired', function(done) {
+        it('Should return status 401 and validation errors - jwt has not expired', function (done) {
 
             let jwtNotExpired
 
@@ -468,7 +456,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
     describe('POST /verify/:idUser', () => {
 
-        it('Should return status 200 and status active', function(done) {
+        it('Should return status 200 and status active', function (done) {
 
             request(server)
                 .post('/api/v1/verify/5e376c66ce68605aa0ed1152')
@@ -488,7 +476,7 @@ describe('Testing Auth API Rest - Integration Tests', () => {
                 })
         })
 
-        it('Should return status 200 and status inactive when refresh token has expired', function(done) {
+        it('Should return status 200 and status inactive when refresh token has expired', function (done) {
 
             request(server)
                 .post('/api/v1/verify/5e376c66ce68605aa0ed1154')
@@ -510,8 +498,8 @@ describe('Testing Auth API Rest - Integration Tests', () => {
 
     })
 
-    afterEach('clean articles collection', function(done) {
-        jwt = ''
+    afterEach('clean articles collection', function (done) {
+
         userDB = {}
 
         User.deleteMany({})
@@ -523,8 +511,9 @@ describe('Testing Auth API Rest - Integration Tests', () => {
             })
     })
 
-    after('database disconnect', function(done) {
+    after('database disconnect', function (done) {
 
+        expiredJwt = ''
         db.disconnect()
             .then(() => {
                 server.close(() => {

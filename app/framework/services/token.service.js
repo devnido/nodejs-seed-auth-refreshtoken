@@ -1,9 +1,6 @@
-const jsonwebtoken = require('jsonwebtoken')
-const randToken = require('rand-token')
+const service = ({ jsonwebtoken, randToken, config }) => ({
 
-const service = ({ config }) => ({
-
-    generateRefreshToken: async() => {
+    generateRefreshToken: async () => {
 
         const refreshToken = randToken.uid(128)
 
@@ -11,7 +8,7 @@ const service = ({ config }) => ({
 
     },
 
-    generateResetPassToken: async() => {
+    generateResetPassToken: async () => {
 
         const resetPassToken = randToken.uid(64) + 'gt'
 
@@ -19,13 +16,13 @@ const service = ({ config }) => ({
 
     },
 
-    generateJwt: async(idUser) => {
+    generateJwt: async (idUser) => {
 
         const payload = {
             uid: idUser,
-            exp: Date.now() + 1000 * 60 * 2 // 2 minutes in milliseconds
+            exp: Math.floor(Date.now() / 1000) + (60 * 2) // 2 minutes in milliseconds
         }
-        const secret = config.app.secretApi
+        const secret = config.app.secretAuth
 
         const options = {
             algorithm: 'HS256'
@@ -36,9 +33,9 @@ const service = ({ config }) => ({
         return token
 
     },
-    verifyJwt: async(token) => {
+    verifyJwt: async (token) => {
 
-        const secret = config.app.secretApi
+        const secret = config.app.secretAuth
 
         const decoded = jsonwebtoken.verify(token, secret)
 
@@ -50,30 +47,32 @@ const service = ({ config }) => ({
             throw 'undecoded'
         }
     },
-    decode: async(jwt) => {
+    decode: async (jwt) => {
 
-        const secret = config.app.secretApi
+        const secret = config.app.secretAuth
 
         const tokenDecoded = jsonwebtoken.verify(jwt, secret, {
             ignoreExpiration: true
         })
 
-        const result = {}
-
         if (!tokenDecoded) {
             throw 'undecoded'
         }
 
-        result.uid = tokenDecoded.uid
+        const { uid, exp } = tokenDecoded
 
-        if (tokenDecoded.exp <= Date.now()) {
+        let status
 
-            result.status = 'expired'
+        const nowInSeconds = Math.floor(Date.now() / 1000)
+
+        if (exp <= nowInSeconds) {
+
+            status = 'expired'
         } else {
-            result.status = 'active'
+            status = 'active'
         }
 
-        return result
+        return { uid, status }
 
     }
 

@@ -34,7 +34,7 @@ Las variables para el entorno de testing estan definidas en el archivo **.env.te
 
 Para ejecutar unit test `npm run test:unit`
 
-Para ejecutar integration tests `npm run test:api`
+Para ejecutar integration tests `npm run test:integration`
 
 Para ejecutar todos los tests `npm test`
 
